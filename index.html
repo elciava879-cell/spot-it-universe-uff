@@ -1,124 +1,452 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Spot-it Universe</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universo Spot-It</title>
+    <!-- Firebase SDK Compat (Realtime Database) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: #08040f; color: #fff; padding: 12px; max-width: 480px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        h1 { font-size: 18px; color: #ff007f; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; }
-        .subtitle { font-size: 9px; color: #00f0ff; font-weight: bold; letter-spacing: 1px; }
-        .card { background: #130a24; border: 1px solid #ff007f; border-radius: 12px; padding: 12px; margin-bottom: 10px; box-shadow: 0 0 15px rgba(255,0,127,0.15); }
-        .nav-tabs { display: flex; gap: 6px; margin-bottom: 10px; overflow-x: auto; padding-bottom: 4px; }
-        .tab-btn { background: #1f0c3d; border: 1px solid #00f0ff; color: #00f0ff; padding: 8px 12px; border-radius: 8px; font-size: 11px; cursor: pointer; white-space: nowrap; font-weight: bold; text-transform: uppercase; }
-        .tab-btn.active { background: #ff007f; color: #fff; border-color: #ff007f; box-shadow: 0 0 10px rgba(255,0,127,0.5); }
-        .section-content { display: none; flex-direction: column; gap: 8px; }
-        .section-content.active { display: flex; }
-        textarea { width: 100%; background: #08040f; border: 1px solid #00f0ff; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; resize: none; height: 70px; outline: none; }
-        button.action-btn { width: 100%; background: linear-gradient(135deg, #ff007f, #7928ca); border: none; color: #fff; padding: 11px; border-radius: 8px; font-weight: 900; font-size: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; }
-        .msg-list { margin-top: 8px; max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
-        .msg-item { background: #1a0e35; padding: 10px; border-radius: 8px; font-size: 13px; border-left: 3px solid #ff007f; }
-        .msg-header { font-size: 10px; color: #00f0ff; font-weight: bold; margin-bottom: 3px; display: flex; justify-content: space-between; }
-        .msg-time { font-size: 9px; color: #8a7c9f; }
-        .user-setup { display: flex; gap: 6px; margin-bottom: 10px; align-items: center; background: #130a24; padding: 8px 10px; border-radius: 8px; border: 1px solid #7928ca; }
-        .user-setup input { width: 100%; background: transparent; border: none; color: #00f0ff; font-size: 12px; font-weight: bold; outline: none; }
+        :root {
+            --bg-color: #05050a;
+            --panel-bg: #10101f;
+            --neon-pink: #ff007f;
+            --neon-cyan: #00f0ff;
+            --neon-purple: #9d00ff;
+            --text-main: #f0f0f5;
+            --text-muted: #8888aa;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        header {
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: var(--neon-pink);
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(255, 0, 127, 0.4);
+        }
+
+        .subtitle {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        .user-box {
+            background: var(--panel-bg);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 12px;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+        }
+
+        .user-box label {
+            font-size: 0.85rem;
+            color: var(--neon-cyan);
+            font-weight: bold;
+        }
+
+        .user-box input {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 1rem;
+            outline: none;
+            width: 100%;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid var(--text-muted);
+            background: var(--panel-bg);
+            color: var(--text-muted);
+            font-weight: bold;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .tab-btn.active {
+            border-color: var(--neon-pink);
+            color: var(--text-main);
+            background: linear-gradient(135deg, rgba(255,0,127,0.2), rgba(157,0,255,0.2));
+            box-shadow: 0 0 12px rgba(255, 0, 127, 0.3);
+        }
+
+        .section-panel {
+            background: var(--panel-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 15px;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+
+        .section-panel.active {
+            display: flex;
+        }
+
+        textarea {
+            width: 100%;
+            height: 90px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--text-muted);
+            border-radius: 10px;
+            padding: 12px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            resize: none;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            border-color: var(--neon-cyan);
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255,0,127,0.4);
+            transition: transform 0.1s, opacity 0.2s;
+        }
+
+        .action-btn:active {
+            transform: scale(0.98);
+        }
+
+        .feed {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 50vh;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .post-card {
+            background: rgba(20, 20, 35, 0.7);
+            border-left: 3px solid var(--neon-pink);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--neon-cyan);
+        }
+
+        .post-body {
+            font-size: 0.9rem;
+            word-break: break-word;
+            line-height: 1.4;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .rooms-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .room-item {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .room-item:hover {
+            border-color: var(--neon-cyan);
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <div>
-            <h1>Spot-it Universe</h1>
-            <div class="subtitle">STREET FLOW & ROOMS</div>
+    <div class="container">
+        <header>
+            <h1>UNIVERSO SPOT-IT</h1>
+            <div class="subtitle">FLUSSO GLOBALE E CONnessione VIVA</div>
+        </header>
+
+        <div class="user-box">
+            <label>NOME:</label>
+            <input type="text" id="userName" placeholder="Il tuo nome o alias...">
         </div>
-    </header>
 
-    <div class="user-setup">
-        <span style="font-size: 11px; color: #fff; font-weight: bold;">NAME:</span>
-        <input type="text" id="usernameInput" value="StreetKing" oninput="saveUsername()">
-    </div>
-
-    <div class="nav-tabs">
-        <button class="tab-btn active" onclick="switchTab('flow', this)">🔥 Flow</button>
-        <button class="tab-btn" onclick="switchTab('rooms', this)">🗣️ Rooms</button>
-        <button class="tab-btn" onclick="switchTab('direct', this)">💬 Direct</button>
-    </div>
-
-    <div id="flow" class="section-content active">
-        <div class="card">
-            <h3 style="font-size: 13px; margin-bottom: 6px; color: #00f0ff;">Post to Flow</h3>
-            <textarea id="inputFlow" placeholder="Drop your thought on the street..."></textarea>
-            <button class="action-btn" onclick="sendMessage('flow')">PUBLISH 🚀</button>
-            <div class="msg-list" id="listFlow"></div>
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('flow')">🔥 FLUSSO</button>
+            <button class="tab-btn" onclick="switchTab('rooms')">🗣️ CAMERE</button>
+            <button class="tab-btn" onclick="switchTab('direct')">💬 DIRETTO</button>
         </div>
-    </div>
 
-    <div id="rooms" class="section-content">
-        <div class="card">
-            <h3 style="font-size: 13px; margin-bottom: 6px; color: #00f0ff;">Exchange Rooms</h3>
-            <textarea id="inputRooms" placeholder="Start a real debate..."></textarea>
-            <button class="action-btn" onclick="sendMessage('rooms')">SEND 🎙️</button>
-            <div class="msg-list" id="listRooms"></div>
+        <!-- SEZIONE FLUSSO -->
+        <div id="panel-flow" class="section-panel active">
+            <div style="font-size: 0.85rem; color: var(--text-muted);">Esprimi il tuo pensiero, condividi una pillola di vita o una riflessione per il mondo.</div>
+            <textarea id="flowInput" placeholder="Scrivi il tuo pensiero per la strada..."></textarea>
+            <button class="action-btn" onclick="publishFlow()">PUBBLICA 🚀</button>
+            <div class="feed" id="flowFeed"></div>
         </div>
-    </div>
 
-    <div id="direct" class="section-content">
-        <div class="card">
-            <h3 style="font-size: 13px; margin-bottom: 6px; color: #00f0ff;">Direct Style</h3>
-            <textarea id="inputDirect" placeholder="Send a direct message..."></textarea>
-            <button class="action-btn" onclick="sendMessage('direct')">SEND 💌</button>
-            <div class="msg-list" id="listDirect"></div>
+        <!-- SEZIONE CAMERE -->
+        <div id="panel-rooms" class="section-panel">
+            <div style="font-size: 0.85rem; color: var(--text-muted);">Spazi tematici di condivisione profonda.</div>
+            <div class="rooms-list" id="roomsList">
+                <div class="room-item" onclick="enterRoom('ADHD & Crescita')">
+                    <span>🧠 ADHD & Crescita</span>
+                    <span style="font-size:0.75rem; color:var(--neon-cyan);">Entra</span>
+                </div>
+                <div class="room-item" onclick="enterRoom('Investimenti & Futuro')">
+                    <span>📈 Investimenti & Futuro</span>
+                    <span style="font-size:0.75rem; color:var(--neon-cyan);">Entra</span>
+                </div>
+                <div class="room-item" onclick="enterRoom('La Vita per Gli Altri')">
+                    <span>💡 La Vita per Gli Altri</span>
+                    <span style="font-size:0.75rem; color:var(--neon-cyan);">Entra</span>
+                </div>
+            </div>
+            <div id="roomChatView" style="display:none; flex-direction:column; gap:10px;">
+                <button class="tab-btn" style="width:fit-content;" onclick="leaveRoom()">⬅ Torna alle Stanze</button>
+                <h3 id="activeRoomTitle" style="color:var(--neon-cyan); font-size:1rem;"></h3>
+                <textarea id="roomInput" placeholder="Scrivi nella camera..."></textarea>
+                <button class="action-btn" onclick="publishRoomMessage()">INVIA NEL CANALE</button>
+                <div class="feed" id="roomFeed"></div>
+            </div>
+        </div>
+
+        <!-- SEZIONE DIRETTO -->
+        <div id="panel-direct" class="section-panel">
+            <div style="font-size: 0.85rem; color: var(--text-muted);">Spazio riservato e diretto.</div>
+            <textarea id="directInput" placeholder="Scrivi un messaggio diretto..."></textarea>
+            <button class="action-btn" onclick="publishDirect()">INVIA MESSAGGIO</button>
+            <div class="feed" id="directFeed"></div>
         </div>
     </div>
 
     <script>
-        function saveUsername() {
-            localStorage.setItem('spot_username', document.getElementById('usernameInput').value);
+        // CONFIGURAZIONE FIREBASE (Usa un database pubblico condiviso di prova o inserisci il tuo link Firebase)
+        const firebaseConfig = {
+            databaseURL: "https://spot-it-universo-default-rtdb.firebaseio.com/"
+        };
+        
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
         }
-        if(localStorage.getItem('spot_username')) {
-            document.getElementById('usernameInput').value = localStorage.getItem('spot_username');
+        const db = firebase.database();
+
+        // Gestione Nome Utente persistente
+        const nameInput = document.getElementById('userName');
+        nameInput.value = localStorage.getItem('spot_it_user') || 'Viandante';
+        nameInput.addEventListener('input', () => {
+            localStorage.setItem('spot_it_user', nameInput.value);
+        });
+
+        function getUserName() {
+            return nameInput.value.trim() || 'Viandante';
         }
 
-        function switchTab(tabId, btn) {
-            document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            btn.classList.add('active');
+        // Navigazione Tab
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+            
+            if(tabName === 'flow') {
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                document.getElementById('panel-flow').classList.add('active');
+            } else if(tabName === 'rooms') {
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+                document.getElementById('panel-rooms').classList.add('active');
+            } else if(tabName === 'direct') {
+                document.querySelectorAll('.tab-btn')[2].classList.add('active');
+                document.getElementById('panel-direct').classList.add('active');
+            }
         }
 
-        function loadMessages() {
-            ['flow', 'rooms', 'direct'].forEach(section => {
-                const data = JSON.parse(localStorage.getItem('spot_data_' + section) || '[]');
-                const listEl = document.getElementById('list' + section.charAt(0).toUpperCase() + section.slice(1));
-                if (data.length === 0) {
-                    listEl.innerHTML = '<div class="msg-item"><div class="msg-header"><span>SYSTEM</span></div><div style="color:#a89bc9;">No messages yet. Be the first to write!</div></div>';
-                    return;
+        // --- FLUSSO GLOBALE ---
+        function publishFlow() {
+            const text = document.getElementById('flowInput').value.trim();
+            if(!text) return;
+            
+            const postData = {
+                author: getUserName(),
+                text: text,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+
+            db.ref('flowPosts').push(postData);
+            document.getElementById('flowInput').value = '';
+        }
+
+        db.ref('flowPosts').on('value', (snapshot) => {
+            const feed = document.getElementById('flowFeed');
+            feed.innerHTML = '';
+            const data = snapshot.val();
+            if(data) {
+                Object.values(data).reverse().forEach(post => {
+                    const card = document.createElement('div');
+                    card.className = 'post-card';
+                    card.innerHTML = `
+                        <div class="post-header"><span>${escapeHtml(post.author)}</span><span>${post.time}</span></div>
+                        <div class="post-body">${escapeHtml(post.text)}</div>
+                    `;
+                    feed.appendChild(card);
+                });
+            }
+        });
+
+        // --- CAMERE ---
+        let currentRoomName = '';
+        function enterRoom(roomName) {
+            currentRoomName = roomName;
+            document.getElementById('roomsList').style.display = 'none';
+            const chatView = document.getElementById('roomChatView');
+            chatView.style.display = 'flex';
+            document.getElementById('activeRoomTitle').innerText = 'Stanza: ' + roomName;
+            loadRoomMessages();
+        }
+
+        function leaveRoom() {
+            currentRoomName = '';
+            document.getElementById('roomsList').style.display = 'flex';
+            document.getElementById('roomChatView').style.display = 'none';
+        }
+
+        function publishRoomMessage() {
+            const text = document.getElementById('roomInput').value.trim();
+            if(!text || !currentRoomName) return;
+
+            const roomKey = currentRoomName.replace(/[^a-zA-Z0-9]/g, '_');
+            const postData = {
+                author: getUserName(),
+                text: text,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+
+            db.ref('rooms/' + roomKey).push(postData);
+            document.getElementById('roomInput').value = '';
+        }
+
+        function loadRoomMessages() {
+            if(!currentRoomName) return;
+            const roomKey = currentRoomName.replace(/[^a-zA-Z0-9]/g, '_');
+            
+            db.ref('rooms/' + roomKey).on('value', (snapshot) => {
+                const feed = document.getElementById('roomFeed');
+                feed.innerHTML = '';
+                const data = snapshot.val();
+                if(data) {
+                    Object.values(data).reverse().forEach(post => {
+                        const card = document.createElement('div');
+                        card.className = 'post-card';
+                        card.innerHTML = `
+                            <div class="post-header"><span>${escapeHtml(post.author)}</span><span>${post.time}</span></div>
+                            <div class="post-body">${escapeHtml(post.text)}</div>
+                        `;
+                        feed.appendChild(card);
+                    });
                 }
-                listEl.innerHTML = data.map(m => `
-                    <div class="msg-item">
-                        <div class="msg-header"><span>${m.author}</span><span class="msg-time">${m.time}</span></div>
-                        <div style="color:#fff; word-break:break-word;">${m.text}</div>
-                    </div>
-                `).join('');
             });
         }
 
-        function sendMessage(section) {
-            const inputEl = document.getElementById('input' + section.charAt(0).toUpperCase() + section.slice(1));
-            const text = inputEl.value.trim();
-            if (!text) return;
-            const author = document.getElementById('usernameInput').value || 'Anonymous';
-            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            let data = JSON.parse(localStorage.getItem('spot_data_' + section) || '[]');
-            data.unshift({ author, text, time });
-            localStorage.setItem('spot_data_' + section, JSON.stringify(data));
-            inputEl.value = '';
-            loadMessages();
+        // --- DIRETTO ---
+        function publishDirect() {
+            const text = document.getElementById('directInput').value.trim();
+            if(!text) return;
+
+            const postData = {
+                author: getUserName(),
+                text: text,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+
+            db.ref('directMessages').push(postData);
+            document.getElementById('directInput').value = '';
         }
 
-        window.onload = loadMessages;
+        db.ref('directMessages').on('value', (snapshot) => {
+            const feed = document.getElementById('directFeed');
+            feed.innerHTML = '';
+            const data = snapshot.val();
+            if(data) {
+                Object.values(data).reverse().forEach(post => {
+                    const card = document.createElement('div');
+                    card.className = 'post-card';
+                    card.innerHTML = `
+                        <div class="post-header"><span>${escapeHtml(post.author)}</span><span>${post.time}</span></div>
+                        <div class="post-body">${escapeHtml(post.text)}</div>
+                    `;
+                    feed.appendChild(card);
+                });
+            }
+        });
+
+        function escapeHtml(text) {
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
     </script>
 </body>
 </html>
