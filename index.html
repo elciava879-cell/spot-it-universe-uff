@@ -10,15 +10,27 @@
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         h1 { font-size: 20px; color: #d8b4fe; }
         .subtitle { font-size: 10px; color: #a78bfa; letter-spacing: 1px; }
+        
         .card { background: #1a103c; border: 1px solid #3b2875; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
         .vibe-box { display: flex; justify-content: space-between; align-items: center; }
         .vibe-tag { background: #6d28d9; padding: 4px 10px; border-radius: 20px; font-size: 12px; }
-        .status-box { background: #2e1065; border: 1px solid #7c3aed; padding: 10px; border-radius: 10px; font-size: 13px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
-        textarea { width: 100%; background: #0f0724; border: 1px solid #4c1d95; color: #fff; border-radius: 8px; padding: 10px; font-size: 14px; margin-top: 10px; resize: none; height: 70px; }
-        button { width: 100%; background: linear-gradient(135deg, #ec4899, #8b5cf6); border: none; color: white; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 10px; }
-        .msg-list { margin-top: 10px; max-height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
-        .msg-item { background: #26164f; padding: 10px; border-radius: 8px; font-size: 13px; border-left: 3px solid #ec4899; }
-        .msg-time { font-size: 10px; color: #a78bfa; margin-top: 4px; text-align: right; }
+        
+        /* Sezioni e menu */
+        .nav-tabs { display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
+        .tab-btn { background: #26164f; border: 1px solid #4c1d95; color: #d8b4fe; padding: 8px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; white-space: nowrap; font-weight: 600; }
+        .tab-btn.active { background: linear-gradient(135deg, #7c3aed, #db2777); color: #fff; border-color: #ec4899; }
+        
+        textarea { width: 100%; background: #0f0724; border: 1px solid #4c1d95; color: #fff; border-radius: 8px; padding: 10px; font-size: 14px; margin-top: 10px; resize: none; height: 90px; }
+        button.action-btn { width: 100%; background: linear-gradient(135deg, #ec4899, #8b5cf6); border: none; color: white; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 10px; }
+        
+        .section-content { display: none; }
+        .section-content.active { display: block; }
+        
+        .msg-list { margin-top: 12px; max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        .msg-item { background: #26164f; padding: 12px; border-radius: 8px; font-size: 13px; border-left: 3px solid #ec4899; line-height: 1.4; }
+        .msg-time { font-size: 10px; color: #a78bfa; margin-top: 6px; text-align: right; }
+        
+        .art-quote { font-style: italic; color: #f472b6; font-size: 13px; margin-bottom: 10px; border-left: 2px solid #f472b6; padding-left: 8px; }
     </style>
 </head>
 <body>
@@ -26,9 +38,9 @@
     <header>
         <div>
             <h1>Spot-it. Universe</h1>
-            <div class="subtitle">GEN-Z STAGE & COMMUNITY</div>
+            <div class="subtitle">ARTE, RIFLESSIONI & VISIONE</div>
         </div>
-        <button style="width: auto; padding: 6px 12px; font-size: 11px;" onclick="eseguiBackup()">Backup</button>
+        <button style="width: auto; padding: 6px 12px; font-size: 11px; background: #26164f; border: 1px solid #7c3aed; color: #fff; border-radius: 6px;" onclick="eseguiBackup()">Backup</button>
     </header>
 
     <div class="card vibe-box">
@@ -39,75 +51,117 @@
         <div class="vibe-tag">Vibe: 100%</div>
     </div>
 
-    <div class="status-box">
-        🔥 <span>Modalità Live Attiva: Condivisione immediata</span>
+    <!-- Menu di Navigazione tra le Anime dell'App -->
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="cambiaTab('riflessioni', this)">💭 Riflessioni & Arte</button>
+        <button class="tab-btn" onclick="cambiaTab('visione', this)">🌟 Visione Migliore</button>
+        <button class="tab-btn" onclick="cambiaTab('standup', this)">🎤 Stand-Up & Lab</button>
     </div>
 
-    <div class="card">
-        <h3 style="font-size: 15px; margin-bottom: 8px;">🎤 Stand-Up Comedy</h3>
-        <div style="font-size: 11px; color: #4ade80; margin-bottom: 5px;" id="statusConnessione">Caricamento contributi...</div>
-        
-        <textarea id="postInput" placeholder="Scrivi la tua barra, la tua poesia o il tuo pezzo comico... (Slang approved 🔥)"></textarea>
-        <button onclick="inviaContributo()">MANDA IN LIVE STREAM 🚀</button>
-        
-        <div class="msg-list" id="feedList">
-            <div class="msg-item">Caricamento in corso...</div>
+    <!-- SEZIONE 1: Riflessioni, Condivisione e Arte -->
+    <div id="riflessioni" class="section-content active">
+        <div class="card">
+            <div class="art-quote">"L'arte e la condivisione delle riflessioni come ponte per superare il superfluo e toccare l'essenza."</div>
+            <h3 style="font-size: 15px; margin-bottom: 8px;">Condividi Pensiero o Arte</h3>
+            <textarea id="inputRiflessioni" placeholder="Scrivi una riflessione profonda, un'opera d'arte concettuale o una connessione umana..."></textarea>
+            <button class="action-btn" onclick="aggiungiContenuto('riflessioni')">PUBBLICA NEL FLUSSO 🎨</button>
+            
+            <div class="msg-list" id="listRiflessioni">
+                <div class="msg-item">
+                    <div>[Riflessione] Accettare i frammenti del percorso è il primo passo per costruire qualcosa che duri.</div>
+                    <div class="msg-time">Spazio condiviso</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEZIONE 2: La Ricerca della Visione Migliore -->
+    <div id="visione" class="section-content">
+        <div class="card">
+            <h3 style="font-size: 15px; margin-bottom: 8px;">🎯 La Mia Visione Migliore</h3>
+            <p style="font-size: 12px; color: #cbd5e1; margin-bottom: 10px;">Uno spazio focalizzato sulla crescita, sulla direzione e sul miglioramento continuo della propria versione interiore ed esteriore.</p>
+            <textarea id="inputVisione" placeholder="Qual è il prossimo passo verso la tua visione migliore? Fissa l'obiettivo..."></textarea>
+            <button class="action-btn" onclick="aggiungiContenuto('visione')">FISSA NELLA VISIONE ✨</button>
+            
+            <div class="msg-list" id="listVisione">
+                <div class="msg-item">
+                    <div>[Visione] Chiarezza d'intenti e zero distrazioni. Andare all'essenziale.</div>
+                    <div class="msg-time">Obiettivo attivo</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEZIONE 3: Stand-Up & Lab -->
+    <div id="standup" class="section-content">
+        <div class="card">
+            <h3 style="font-size: 15px; margin-bottom: 8px;">🎤 Stand-Up & Laboratorio</h3>
+            <textarea id="inputStandup" placeholder="Scrivi la tua barra, il tuo pezzo comico o l'idea grezza..."></textarea>
+            <button class="action-btn" onclick="aggiungiContenuto('standup')">REGISTRA IN LAB 🚀</button>
+            
+            <div class="msg-list" id="listStandup">
+                <div class="msg-item">
+                    <div>[Stand-Up] Faruk, pesce in callo.</div>
+                    <div class="msg-time">Salvato alle 02:09</div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Salvataggio e lettura locale potenziata e immediata tra tab/dispositivo simulato
-        function caricaMessaggi() {
-            try {
-                const salvati = JSON.parse(localStorage.getItem('spot_it_posts') || '[]');
-                const feed = document.getElementById('feedList');
-                
-                if(salvati.length === 0) {
-                    // Primo avvio di default
-                    salvati.push({ testo: "Faruk, pesce in callo", ora: "02:09" });
-                    localStorage.setItem('spot_it_posts', JSON.stringify(salvati));
-                }
-
-                feed.innerHTML = salvati.map(m => `
-                    <div class="msg-item">
-                        <div>[Stand-Up Comedy] ${m.testo}</div>
-                        <div class="msg-time">Salvato alle ${m.ora}</div>
-                    </div>
-                `).join('');
-                
-                document.getElementById('statusConnessione').innerText = "Live offline attiva (" + salvati.length + " contributi salvati)";
-            } catch(e) {
-                console.error(e);
-            }
+        function cambiaTab(tabId, btn) {
+            document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
         }
 
-        function inviaContributo() {
-            const testoInput = document.getElementById('postInput');
-            const testo = testoInput.value.trim();
-            if(!testo) return;
+        function caricaDati() {
+            ['riflessioni', 'visione', 'standup'].forEach(sezione => {
+                const salvati = JSON.parse(localStorage.getItem('spot_it_' + sezione) || '[]');
+                const listEl = document.getElementById('list' + sezione.charAt(0).toUpperCase() + sezione.slice(1));
+                if (salvati.length > 0) {
+                    listEl.innerHTML = salvati.map(m => `
+                        <div class="msg-item">
+                            <div>${m.testo}</div>
+                            <div class="msg-time">${m.ora}</div>
+                        </div>
+                    `).join('');
+                }
+            });
+        }
+
+        function aggiungiContenuto(sezione) {
+            const inputEl = document.getElementById('input' + sezione.charAt(0).toUpperCase() + sezione.slice(1));
+            const testo = inputEl.value.trim();
+            if (!testo) return;
 
             const oraCorrente = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            let salvati = JSON.parse(localStorage.getItem('spot_it_' + sezione) || '[]');
             
-            let salvati = JSON.parse(localStorage.getItem('spot_it_posts') || '[]');
-            salvati.unshift({ testo: testo, ora: oraCorrente }); // Aggiunge in cima
+            let prefisso = sezione === 'riflessioni' ? '[Riflessione & Arte]' : sezione === 'visione' ? '[Visione Migliore]' : '[Stand-Up Lab]';
+            salvati.unshift({ testo: `${prefisso} ${testo}`, ora: oraCorrente });
             
-            localStorage.setItem('spot_it_posts', JSON.stringify(salvati));
-            
-            testoInput.value = '';
-            caricaMessaggi();
+            localStorage.setItem('spot_it_' + sezione, JSON.stringify(salvati));
+            inputEl.value = '';
+            caricaDati();
         }
 
         function eseguiBackup() {
-            const dati = localStorage.getItem('spot_it_posts');
-            const blob = new Blob([dati], { type: 'json' });
+            const tutto = {
+                riflessioni: localStorage.getItem('spot_it_riflessioni'),
+                visione: localStorage.getItem('spot_it_visione'),
+                standup: localStorage.getItem('spot_it_standup')
+            };
+            const blob = new Blob([JSON.stringify(tutto, null, 2)], { type: 'json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'backup-spot-it.json';
+            a.download = 'backup-completo-spot-it.json';
             a.click();
         }
 
-        window.onload = caricaMessaggi;
+        window.onload = caricaDati;
     </script>
 </body>
 </html>
