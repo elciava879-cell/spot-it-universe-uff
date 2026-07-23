@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spot-It Universe</title>
-    <!-- Firebase SDK Compat (Realtime Database) -->
+    <title>Spot-It Universe - Autonomous Evolving Engine</title>
+    <!-- Firebase SDK Compat -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
         :root {
-            --bg-color: #05050a;
-            --panel-bg: #10101f;
+            --bg-color: #030308;
+            --panel-bg: #0b0b1a;
             --neon-pink: #ff007f;
             --neon-cyan: #00f0ff;
             --neon-purple: #9d00ff;
+            --neon-emerald: #00ff66;
             --text-main: #f0f0f5;
             --text-muted: #8888aa;
         }
@@ -33,11 +34,23 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
+            overflow-x: hidden;
+            transition: background 0.8s ease;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 20%, rgba(157, 0, 255, 0.08), transparent 70%);
+            z-index: -1;
+            pointer-events: none;
+            transition: all 1s ease;
         }
 
         .container {
             width: 100%;
-            max-width: 600px;
+            max-width: 650px;
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -45,37 +58,89 @@
 
         header {
             text-align: center;
-            padding: 10px 0;
+            padding: 15px 0;
+            position: relative;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
         }
 
         h1 {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             color: var(--neon-pink);
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(255, 0, 127, 0.4);
+            letter-spacing: 3px;
+            text-shadow: 0 0 15px rgba(255, 0, 127, 0.5);
         }
 
         .subtitle {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
+            letter-spacing: 2px;
+            margin-top: 5px;
+            text-transform: uppercase;
+        }
+
+        .evolution-hud {
+            background: linear-gradient(135deg, rgba(157,0,255,0.15), rgba(0,240,255,0.1));
+            border: 1px solid var(--neon-cyan);
+            border-radius: 12px;
+            padding: 12px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+        }
+
+        .hud-info {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .hud-title {
+            font-size: 0.7rem;
+            color: var(--neon-cyan);
             letter-spacing: 1px;
-            margin-top: 4px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .hud-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-main);
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+        }
+
+        .boost-btn {
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            cursor: pointer;
+            box-shadow: 0 0 12px rgba(0,240,255,0.4);
+            transition: transform 0.1s, filter 0.2s;
+        }
+
+        .boost-btn:active {
+            transform: scale(0.95);
         }
 
         .user-box {
             background: var(--panel-bg);
-            border: 1px solid var(--neon-cyan);
+            border: 1px solid var(--neon-purple);
             border-radius: 12px;
             padding: 10px 15px;
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+            box-shadow: 0 0 15px rgba(157, 0, 255, 0.15);
         }
 
         .user-box label {
             font-size: 0.85rem;
-            color: var(--neon-cyan);
+            color: var(--neon-purple);
             font-weight: bold;
         }
 
@@ -122,7 +187,7 @@
             display: none;
             flex-direction: column;
             gap: 12px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.6);
         }
 
         .section-panel.active {
@@ -132,7 +197,7 @@
         textarea {
             width: 100%;
             height: 90px;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.4);
             border: 1px solid var(--text-muted);
             border-radius: 10px;
             padding: 12px;
@@ -168,13 +233,13 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            max-height: 50vh;
+            max-height: 45vh;
             overflow-y: auto;
             padding-right: 4px;
         }
 
         .post-card {
-            background: rgba(20, 20, 35, 0.7);
+            background: rgba(20, 20, 35, 0.8);
             border-left: 3px solid var(--neon-pink);
             border-radius: 8px;
             padding: 12px;
@@ -202,25 +267,16 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .rooms-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .room-item {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
-            padding: 12px;
+        .mutation-log {
+            font-family: monospace;
+            font-size: 0.75rem;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px dashed var(--neon-emerald);
+            color: var(--neon-emerald);
+            padding: 10px;
             border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .room-item:hover {
-            border-color: var(--neon-cyan);
+            max-height: 90px;
+            overflow-y: auto;
         }
     </style>
 </head>
@@ -229,60 +285,61 @@
     <div class="container">
         <header>
             <h1>SPOT-IT UNIVERSE</h1>
-            <div class="subtitle">GLOBAL LIVE STREAM & CONNECTION</div>
+            <div class="subtitle">AUTONOMOUS EVOLUTION ENGINE</div>
         </header>
+
+        <!-- VISION & EVOLUTION HUD -->
+        <div class="evolution-hud" id="evolutionHud">
+            <div class="hud-info">
+                <span class="hud-title">Vision Index</span>
+                <span class="hud-value" id="visionScore">1.00x</span>
+            </div>
+            <div class="hud-info">
+                <span class="hud-title">Evolution Tier</span>
+                <span class="hud-value" id="evolutionTier">Alpha I</span>
+            </div>
+            <button class="boost-btn" onclick="increaseVision()">+ ELEVATE</button>
+        </div>
 
         <div class="user-box">
             <label>NAME:</label>
-            <input type="text" id="userName" placeholder="Your name or alias...">
+            <input type="text" id="userName" placeholder="Your alias...">
         </div>
 
         <div class="nav-tabs">
             <button class="tab-btn active" onclick="switchTab('flow')">🔥 FLOW</button>
-            <button class="tab-btn" onclick="switchTab('rooms')">🗣️ ROOMS</button>
-            <button class="tab-btn" onclick="switchTab('direct')">💬 DIRECT</button>
+            <button class="tab-btn" onclick="switchTab('evolution')">🧬 EVOLUTION LOG</button>
+            <button class="tab-btn" onclick="switchTab('core')">💡 CORE PILLS</button>
         </div>
 
         <!-- FLOW SECTION -->
         <div id="panel-flow" class="section-panel active">
-            <div style="font-size: 0.85rem; color: var(--text-muted);">Share your thoughts, life pills, or reflections with the world.</div>
-            <textarea id="flowInput" placeholder="Express your thoughts for the road..."></textarea>
-            <button class="action-btn" onclick="publishFlow()">PUBLISH 🚀</button>
+            <div style="font-size: 0.85rem; color: var(--text-muted);">Share thoughts amplified by the current vision level.</div>
+            <textarea id="flowInput" placeholder="Express your vision..."></textarea>
+            <button class="action-btn" onclick="publishFlow()">BROADCAST TO UNIVERSE 🚀</button>
             <div class="feed" id="flowFeed"></div>
         </div>
 
-        <!-- ROOMS SECTION -->
-        <div id="panel-rooms" class="section-panel">
-            <div style="font-size: 0.85rem; color: var(--text-muted);">Deep thematic rooms for shared growth.</div>
-            <div class="rooms-list" id="roomsList">
-                <div class="room-item" onclick="enterRoom('ADHD & Growth')">
-                    <span>🧠 ADHD & Growth</span>
-                    <span style="font-size:0.75rem; color:var(--neon-cyan);">Enter</span>
-                </div>
-                <div class="room-item" onclick="enterRoom('Investments & Future')">
-                    <span>📈 Investments & Future</span>
-                    <span style="font-size:0.75rem; color:var(--neon-cyan);">Enter</span>
-                </div>
-                <div class="room-item" onclick="enterRoom('Life for Others')">
-                    <span>💡 Life for Others</span>
-                    <span style="font-size:0.75rem; color:var(--neon-cyan);">Enter</span>
-                </div>
+        <!-- EVOLUTION SECTION -->
+        <div id="panel-evolution" class="section-panel">
+            <div style="font-size: 0.85rem; color: var(--text-muted);">Autonomous self-improvement record and adaptive mutations:</div>
+            <div class="mutation-log" id="mutationLog">
+                [SYSTEM INITIALIZED] Autonomous loop online. Awaiting vision spikes...
             </div>
-            <div id="roomChatView" style="display:none; flex-direction:column; gap:10px;">
-                <button class="tab-btn" style="width:fit-content;" onclick="leaveRoom()">⬅ Back to Rooms</button>
-                <h3 id="activeRoomTitle" style="color:var(--neon-cyan); font-size:1rem;"></h3>
-                <textarea id="roomInput" placeholder="Write in the room..."></textarea>
-                <button class="action-btn" onclick="publishRoomMessage()">SEND TO CHANNEL</button>
-                <div class="feed" id="roomFeed"></div>
-            </div>
+            <div style="font-size: 0.8rem; color: var(--neon-cyan); margin-top: 5px;">Active Autonomous Rules:</div>
+            <ul style="font-size: 0.78rem; color: var(--text-muted); padding-left: 18px; display: flex; flex-direction: column; gap: 4px;">
+                <li>Dynamic accent shifting on Vision increment.</li>
+                <li>Autonomous expansion of neural feed capacity.</li>
+                <li>Real-time synchronization across connected nodes.</li>
+            </ul>
         </div>
 
-        <!-- DIRECT SECTION -->
-        <div id="panel-direct" class="section-panel">
-            <div style="font-size: 0.85rem; color: var(--text-muted);">Private and direct channel space.</div>
-            <textarea id="directInput" placeholder="Write a direct message..."></textarea>
-            <button class="action-btn" onclick="publishDirect()">SEND MESSAGE</button>
-            <div class="feed" id="directFeed"></div>
+        <!-- CORE PILLS SECTION -->
+        <div id="panel-core" class="section-panel">
+            <div style="font-size: 0.85rem; color: var(--text-muted);">Pills of life, suffering, and growth framework.</div>
+            <textarea id="coreInput" placeholder="Record a profound life pill..."></textarea>
+            <button class="action-btn" onclick="publishCore()">SAVE TO CORE RECORD</button>
+            <div class="feed" id="coreFeed"></div>
         </div>
     </div>
 
@@ -313,13 +370,59 @@
             if(tabName === 'flow') {
                 document.querySelectorAll('.tab-btn')[0].classList.add('active');
                 document.getElementById('panel-flow').classList.add('active');
-            } else if(tabName === 'rooms') {
+            } else if(tabName === 'evolution') {
                 document.querySelectorAll('.tab-btn')[1].classList.add('active');
-                document.getElementById('panel-rooms').classList.add('active');
-            } else if(tabName === 'direct') {
+                document.getElementById('panel-evolution').classList.add('active');
+            } else if(tabName === 'core') {
                 document.querySelectorAll('.tab-btn')[2].classList.add('active');
-                document.getElementById('panel-direct').classList.add('active');
+                document.getElementById('panel-core').classList.add('active');
             }
+        }
+
+        // --- AUTONOMOUS SELF-IMPROVEMENT ENGINE ---
+        let currentVision = parseFloat(localStorage.getItem('spot_it_vision')) || 1.00;
+        
+        function updateVisionUI() {
+            document.getElementById('visionScore').innerText = currentVision.toFixed(2) + 'x';
+            let tier = 'Alpha I';
+            if(currentVision >= 5.00) tier = 'Omega Infinite';
+            else if(currentVision >= 3.00) tier = 'Gamma Evolved';
+            else if(currentVision >= 2.00) tier = 'Beta Advanced';
+            document.getElementById('evolutionTier').innerText = tier;
+        }
+        updateVisionUI();
+
+        function logMutation(message) {
+            const logBox = document.getElementById('mutationLog');
+            const timestamp = new Date().toLocaleTimeString();
+            logBox.innerHTML += `<br>[${timestamp}] ${message}`;
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        // Autonomous Trigger when Vision increases
+        function increaseVision() {
+            currentVision += 0.25;
+            localStorage.setItem('spot_it_vision', currentVision);
+            updateVisionUI();
+
+            if(currentVision >= 2.00 && currentVision < 3.00) {
+                document.documentElement.style.setProperty('--neon-pink', '#ff00ff');
+                logMutation("Mutation triggered: Neon spectrum recalibrated to Magenta.");
+            } else if(currentVision >= 3.00 && currentVision < 5.00) {
+                document.documentElement.style.setProperty('--neon-cyan', '#00ffcc');
+                logMutation("Mutation triggered: High-frequency data conduits unlocked.");
+            } else if(currentVision >= 5.00) {
+                document.documentElement.style.setProperty('--neon-pink', '#00ff66');
+                logMutation("Mutation triggered: Singularity Tier reached. Maximum optimization active.");
+            } else {
+                logMutation("Vision elevated to " + currentVision.toFixed(2) + "x. Runtime parameters optimized.");
+            }
+
+            db.ref('autonomousEngine/visionMetrics').push({
+                user: getUserName(),
+                vision: currentVision,
+                timestamp: new Date().toISOString()
+            });
         }
 
         function publishFlow() {
@@ -329,6 +432,7 @@
             const postData = {
                 author: getUserName(),
                 text: text,
+                visionAtPost: currentVision,
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
 
@@ -345,7 +449,7 @@
                     const card = document.createElement('div');
                     card.className = 'post-card';
                     card.innerHTML = `
-                        <div class="post-header"><span>${escapeHtml(post.author)}</span><span>${post.time}</span></div>
+                        <div class="post-header"><span>${escapeHtml(post.author)} (${post.visionAtPost || 1.0}x)</span><span>${post.time}</span></div>
                         <div class="post-body">${escapeHtml(post.text)}</div>
                     `;
                     feed.appendChild(card);
@@ -353,61 +457,8 @@
             }
         });
 
-        let currentRoomName = '';
-        function enterRoom(roomName) {
-            currentRoomName = roomName;
-            document.getElementById('roomsList').style.display = 'none';
-            const chatView = document.getElementById('roomChatView');
-            chatView.style.display = 'flex';
-            document.getElementById('activeRoomTitle').innerText = 'Room: ' + roomName;
-            loadRoomMessages();
-        }
-
-        function leaveRoom() {
-            currentRoomName = '';
-            document.getElementById('roomsList').style.display = 'flex';
-            document.getElementById('roomChatView').style.display = 'none';
-        }
-
-        function publishRoomMessage() {
-            const text = document.getElementById('roomInput').value.trim();
-            if(!text || !currentRoomName) return;
-
-            const roomKey = currentRoomName.replace(/[^a-zA-Z0-9]/g, '_');
-            const postData = {
-                author: getUserName(),
-                text: text,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            };
-
-            db.ref('rooms/' + roomKey).push(postData);
-            document.getElementById('roomInput').value = '';
-        }
-
-        function loadRoomMessages() {
-            if(!currentRoomName) return;
-            const roomKey = currentRoomName.replace(/[^a-zA-Z0-9]/g, '_');
-            
-            db.ref('rooms/' + roomKey).on('value', (snapshot) => {
-                const feed = document.getElementById('roomFeed');
-                feed.innerHTML = '';
-                const data = snapshot.val();
-                if(data) {
-                    Object.values(data).reverse().forEach(post => {
-                        const card = document.createElement('div');
-                        card.className = 'post-card';
-                        card.innerHTML = `
-                            <div class="post-header"><span>${escapeHtml(post.author)}</span><span>${post.time}</span></div>
-                            <div class="post-body">${escapeHtml(post.text)}</div>
-                        `;
-                        feed.appendChild(card);
-                    });
-                }
-            });
-        }
-
-        function publishDirect() {
-            const text = document.getElementById('directInput').value.trim();
+        function publishCore() {
+            const text = document.getElementById('coreInput').value.trim();
             if(!text) return;
 
             const postData = {
@@ -416,20 +467,21 @@
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
 
-            db.ref('directMessages').push(postData);
-            document.getElementById('directInput').value = '';
+            db.ref('corePills').push(postData);
+            document.getElementById('coreInput').value = '';
         }
 
-        db.ref('directMessages').on('value', (snapshot) => {
-            const feed = document.getElementById('directFeed');
+        db.ref('corePills').on('value', (snapshot) => {
+            const feed = document.getElementById('coreFeed');
             feed.innerHTML = '';
             const data = snapshot.val();
             if(data) {
                 Object.values(data).reverse().forEach(post => {
                     const card = document.createElement('div');
                     card.className = 'post-card';
+                    card.style.borderLeftColor = 'var(--neon-emerald)';
                     card.innerHTML = `
-                        <div class="post-header"><span>${escapeHtml(post.author)}</span><span>${post.time}</span></div>
+                        <div class="post-header"><span style="color:var(--neon-emerald)">${escapeHtml(post.author)}</span><span>${post.time}</span></div>
                         <div class="post-body">${escapeHtml(post.text)}</div>
                     `;
                     feed.appendChild(card);
