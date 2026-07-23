@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -36,30 +36,30 @@
     </header>
 
     <div class="user-setup">
-        <span style="font-size: 11px; color: #fff; font-weight: bold;">NOME:</span>
-        <input type="text" id="usernameInput" value="StreetKing" oninput="salvaUsername()">
+        <span style="font-size: 11px; color: #fff; font-weight: bold;">NAME:</span>
+        <input type="text" id="usernameInput" value="StreetKing" oninput="saveUsername()">
     </div>
 
     <div class="nav-tabs">
-        <button class="tab-btn active" onclick="cambiaTab('flusso', this)">🔥 Il Flusso</button>
-        <button class="tab-btn" onclick="cambiaTab('rooms', this)">🗣️ Room</button>
-        <button class="tab-btn" onclick="cambiaTab('direct', this)">💬 Direct</button>
+        <button class="tab-btn active" onclick="switchTab('flow', this)">🔥 Flow</button>
+        <button class="tab-btn" onclick="switchTab('rooms', this)">🗣️ Rooms</button>
+        <button class="tab-btn" onclick="switchTab('direct', this)">💬 Direct</button>
     </div>
 
-    <div id="flusso" class="section-content active">
+    <div id="flow" class="section-content active">
         <div class="card">
-            <h3 style="font-size: 13px; margin-bottom: 6px; color: #00f0ff;">Scrivi nel Flusso</h3>
-            <textarea id="inputFlusso" placeholder="Lancia il tuo pensiero sulla strada..."></textarea>
-            <button class="action-btn" onclick="inviaMessaggio('flusso')">PUBBLICA 🚀</button>
-            <div class="msg-list" id="listFlusso"></div>
+            <h3 style="font-size: 13px; margin-bottom: 6px; color: #00f0ff;">Post to Flow</h3>
+            <textarea id="inputFlow" placeholder="Drop your thought on the street..."></textarea>
+            <button class="action-btn" onclick="sendMessage('flow')">PUBLISH 🚀</button>
+            <div class="msg-list" id="listFlow"></div>
         </div>
     </div>
 
     <div id="rooms" class="section-content">
         <div class="card">
-            <h3 style="font-size: 13px; margin-bottom: 6px; color: #00f0ff;">Room di Scambio</h3>
-            <textarea id="inputRooms" placeholder="Apri il dibattito vero..."></textarea>
-            <button class="action-btn" onclick="inviaMessaggio('rooms')">INVIA 🎙️</button>
+            <h3 style="font-size: 13px; margin-bottom: 6px; color: #00f0ff;">Exchange Rooms</h3>
+            <textarea id="inputRooms" placeholder="Start a real debate..."></textarea>
+            <button class="action-btn" onclick="sendMessage('rooms')">SEND 🎙️</button>
             <div class="msg-list" id="listRooms"></div>
         </div>
     </div>
@@ -67,58 +67,58 @@
     <div id="direct" class="section-content">
         <div class="card">
             <h3 style="font-size: 13px; margin-bottom: 6px; color: #00f0ff;">Direct Style</h3>
-            <textarea id="inputDirect" placeholder="Manda il messaggio diretto..."></textarea>
-            <button class="action-btn" onclick="inviaMessaggio('direct')">INVIA 💌</button>
+            <textarea id="inputDirect" placeholder="Send a direct message..."></textarea>
+            <button class="action-btn" onclick="sendMessage('direct')">SEND 💌</button>
             <div class="msg-list" id="listDirect"></div>
         </div>
     </div>
 
     <script>
-        function salvaUsername() {
+        function saveUsername() {
             localStorage.setItem('spot_username', document.getElementById('usernameInput').value);
         }
         if(localStorage.getItem('spot_username')) {
             document.getElementById('usernameInput').value = localStorage.getItem('spot_username');
         }
 
-        function cambiaTab(tabId, btn) {
+        function switchTab(tabId, btn) {
             document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             btn.classList.add('active');
         }
 
-        function caricaMessaggi() {
-            ['flusso', 'rooms', 'direct'].forEach(sezione => {
-                const dati = JSON.parse(localStorage.getItem('spot_data_' + sezione) || '[]');
-                const listEl = document.getElementById('list' + sezione.charAt(0).toUpperCase() + sezione.slice(1));
-                if (dati.length === 0) {
-                    listEl.innerHTML = '<div class="msg-item"><div class="msg-header"><span>SYSTEM</span></div><div style="color:#a89bc9;">Ancora niente qui. Scrivi tu il primo pezzo!</div></div>';
+        function loadMessages() {
+            ['flow', 'rooms', 'direct'].forEach(section => {
+                const data = JSON.parse(localStorage.getItem('spot_data_' + section) || '[]');
+                const listEl = document.getElementById('list' + section.charAt(0).toUpperCase() + section.slice(1));
+                if (data.length === 0) {
+                    listEl.innerHTML = '<div class="msg-item"><div class="msg-header"><span>SYSTEM</span></div><div style="color:#a89bc9;">No messages yet. Be the first to write!</div></div>';
                     return;
                 }
-                listEl.innerHTML = dati.map(m => `
+                listEl.innerHTML = data.map(m => `
                     <div class="msg-item">
-                        <div class="msg-header"><span>${m.autore}</span><span class="msg-time">${m.ora}</span></div>
-                        <div style="color:#fff; word-break:break-word;">${m.testo}</div>
+                        <div class="msg-header"><span>${m.author}</span><span class="msg-time">${m.time}</span></div>
+                        <div style="color:#fff; word-break:break-word;">${m.text}</div>
                     </div>
                 `).join('');
             });
         }
 
-        function inviaMessaggio(sezione) {
-            const inputEl = document.getElementById('input' + sezione.charAt(0).toUpperCase() + sezione.slice(1));
-            const testo = inputEl.value.trim();
-            if (!testo) return;
-            const autore = document.getElementById('usernameInput').value || 'Anonymous';
-            const ora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            let dati = JSON.parse(localStorage.getItem('spot_data_' + sezione) || '[]');
-            dati.unshift({ autore, testo, ora });
-            localStorage.setItem('spot_data_' + sezione, JSON.stringify(dati));
+        function sendMessage(section) {
+            const inputEl = document.getElementById('input' + section.charAt(0).toUpperCase() + section.slice(1));
+            const text = inputEl.value.trim();
+            if (!text) return;
+            const author = document.getElementById('usernameInput').value || 'Anonymous';
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            let data = JSON.parse(localStorage.getItem('spot_data_' + section) || '[]');
+            data.unshift({ author, text, time });
+            localStorage.setItem('spot_data_' + section, JSON.stringify(data));
             inputEl.value = '';
-            caricaMessaggi();
+            loadMessages();
         }
 
-        window.onload = caricaMessaggi;
+        window.onload = loadMessages;
     </script>
 </body>
 </html>
