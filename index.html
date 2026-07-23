@@ -6,29 +6,27 @@
     <title>Spot-it. Universe - Positive Vibe</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: #151026; color: #fff; padding: 15px; } /* Blu cosmico più caldo */
+        body { background-color: #151026; color: #fff; padding: 15px; }
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        h1 { font-size: 20px; color: #fce7f3; } /* Rosa chiarissimo */
-        .subtitle { font-size: 10px; color: #fb923c; letter-spacing: 1px; } /* Arancione solare */
+        h1 { font-size: 20px; color: #fce7f3; }
+        .subtitle { font-size: 10px; color: #fb923c; letter-spacing: 1px; }
         
-        .card { background: #1e143b; border: 1px solid #5b21b6; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); } /* Card più definite */
-        .vibe-box { display: flex; justify-content: space-between; align-items: center; background: linear-gradient(90deg, #4f46e5, #ec4899); color: #fff; border: none;} /* Vibe box sfumata positiva */
-        .vibe-tag { background: #f59e0b; padding: 4px 10px; border-radius: 20px; font-size: 12px; color: #151026; font-weight: bold;} /* Tag giallo sole */
+        .card { background: #1e143b; border: 1px solid #5b21b6; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        .vibe-box { display: flex; justify-content: space-between; align-items: center; background: linear-gradient(90deg, #4f46e5, #ec4899); color: #fff; border: none; }
+        .vibe-tag { background: #f59e0b; padding: 4px 10px; border-radius: 20px; font-size: 12px; color: #151026; font-weight: bold; }
         
-        /* Sezioni e menu */
         .nav-tabs { display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
         .tab-btn { background: #3b0764; border: 1px solid #7c3aed; color: #fbcfe8; padding: 8px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; white-space: nowrap; font-weight: 600; transition: all 0.2s; }
         .tab-btn.active { background: linear-gradient(135deg, #f59e0b, #ec4899); color: #151026; border-color: #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
         
         textarea { width: 100%; background: #151026; border: 1px solid #7c3aed; color: #fff; border-radius: 8px; padding: 10px; font-size: 14px; margin-top: 10px; resize: none; height: 90px; }
         button.action-btn { width: 100%; background: linear-gradient(135deg, #f472b6, #fb923c); border: none; color: #151026; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 10px; transition: all 0.2s; }
-        button.action-btn:hover { background: linear-gradient(135deg, #fb923c, #f472b6); transform: translateY(-1px);}
         
         .section-content { display: none; }
         .section-content.active { display: block; animation: fadeIn 0.3s ease-in; }
         
         .msg-list { margin-top: 12px; max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-        .msg-item { background: #312e81; padding: 12px; border-radius: 8px; font-size: 13px; border-left: 3px solid #fb923c; line-height: 1.4; box-shadow: 0 2px 4px rgba(0,0,0,0.1);}
+        .msg-item { background: #312e81; padding: 12px; border-radius: 8px; font-size: 13px; border-left: 3px solid #fb923c; line-height: 1.4; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .msg-time { font-size: 10px; color: #fcd34d; margin-top: 6px; text-align: right; }
         
         .art-quote { font-style: italic; color: #fda4af; font-size: 13px; margin-bottom: 10px; border-left: 2px solid #fda4af; padding-left: 8px; }
@@ -100,8 +98,8 @@
             
             <div class="msg-list" id="listStandup">
                 <div class="msg-item">
-                    <div>[Stand-Up] Faruk, pesce in callo.</div>
-                    <div class="msg-time">Salvato alle 02:09</div>
+                    <div>[Stand-Up] Accettazione di giunti e barre libere.</div>
+                    <div class="msg-time">Laboratorio attivo</div>
                 </div>
             </div>
         </div>
