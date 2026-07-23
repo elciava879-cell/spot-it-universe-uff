@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Spot-it. Universe - Official App</title>
+    <title>Spot-it. Universe - Street Culture & Flow</title>
     <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Spot-it.%20Universe%22%2C%22short_name%22%3A%22Spot-it%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23151026%22%2C%22theme_color%22%3A%22%237c3aed%22%7D">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -32,9 +32,12 @@
         textarea { width: 100%; background: #151026; border: 1px solid #7c3aed; color: #fff; border-radius: 8px; padding: 10px; font-size: 14px; margin-top: 10px; resize: none; height: 90px; outline: none; }
         button.action-btn { width: 100%; background: linear-gradient(135deg, #f472b6, #fb923c); border: none; color: #151026; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 10px rgba(244,114,182,0.2); }
         
-        .msg-list { margin-top: 12px; max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-        .msg-item { background: #312e81; padding: 12px; border-radius: 8px; font-size: 13px; border-left: 3px solid #fb923c; line-height: 1.4; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .msg-time { font-size: 10px; color: #fcd34d; margin-top: 6px; text-align: right; }
+        /* Stile chat / Direct Instagram style */
+        .msg-list { margin-top: 12px; max-height: 280px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .msg-item { background: #2a1b4e; padding: 12px; border-radius: 12px; font-size: 13px; border-left: 3px solid #ec4899; line-height: 1.4; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .msg-header { display: flex; justify-content: space-between; font-size: 11px; color: #f472b6; font-weight: bold; }
+        .msg-text { color: #f3f4f6; }
+        .msg-time { font-size: 9px; color: #9ca3af; text-align: right; }
         
         .art-quote { font-style: italic; color: #fda4af; font-size: 13px; margin-bottom: 10px; border-left: 2px solid #fda4af; padding-left: 8px; }
 
@@ -46,7 +49,7 @@
     <header>
         <div>
             <h1>Spot-it. Universe</h1>
-            <div class="subtitle">OFFICIAL APP UFFICIALE</div>
+            <div class="subtitle">HIP HOP, ART & STREET FLOW</div>
         </div>
         <div class="header-btns">
             <button class="top-btn install-btn" id="installBtn" onclick="installaApp()">📲 Installa</button>
@@ -63,95 +66,63 @@
     </div>
 
     <div class="nav-tabs">
-        <button class="tab-btn active" onclick="cambiaTab('riflessioni', this)">💭 Riflessioni & Arte</button>
-        <button class="tab-btn" onclick="cambiaTab('visione', this)">🌟 Visione & Investimenti</button>
-        <button class="tab-btn" onclick="cambiaTab('standup', this)">🎤 Stand-Up & Joint</button>
-        <button class="tab-btn" onclick="cambiaTab('pillole', this)">💊 Pillole di Vita</button>
-        <button class="tab-btn" onclick="cambiaTab('libro', this)">📖 Libro ADHD</button>
+        <button class="tab-btn active" onclick="cambiaTab('flusso', this)">🔥 Il Flusso & Arte</button>
+        <button class="tab-btn" onclick="cambiaTab('room', this)">🗣️ Room & Opinioni</button>
+        <button class="tab-btn" onclick="cambiaTab('direct', this)">💬 Direct Style</button>
     </div>
 
-    <!-- SEZIONE 1: RIFLESSIONI & ARTE -->
-    <div id="riflessioni" class="section-content active">
+    <!-- SEZIONE 1: IL FLUSSO & ARTE -->
+    <div id="flusso" class="section-content active">
         <div class="card">
-            <div class="art-quote">"L'arte e la condivisione sono luce che alimenta l'anima."</div>
-            <h3 style="font-size: 15px; margin-bottom: 8px;">Condividi la Luce</h3>
-            <textarea id="inputRiflessioni" placeholder="Condividi un'ispirazione, un'opera d'arte o un pensiero positivo..."></textarea>
-            <button class="action-btn" onclick="aggiungiContenuto('riflessioni')">DIFFONDI NEL FLUSSO 💖</button>
-            <div class="msg-list" id="listRiflessioni">
+            <div class="art-quote">"L'hip hop, la cultura e la filosofia di strada sono luce che alimenta l'anima e connette le persone."</div>
+            <h3 style="font-size: 15px; margin-bottom: 8px;">Condividi nel Flusso</h3>
+            <textarea id="inputFlusso" placeholder="Lancia un pensiero, una barra o un'ispirazione artistica..."></textarea>
+            <button class="action-btn" onclick="aggiungiContenuto('flusso', 'Flusso & Arte', 'Street Vibe')">DIFFONDI NEL FLUSSO 💖</button>
+            <div class="msg-list" id="listFlusso">
                 <div class="msg-item">
-                    <div>[Riflessione] Ogni passo è luce. Anche nel buio, la direzione è chiara.</div>
-                    <div class="msg-time">Flusso di positività</div>
+                    <div class="msg-header"><span>Street Philosopher</span><span>🔥</span></div>
+                    <div class="msg-text">Ogni passo è beat, ogni parola è cultura. La direzione è chiara.</div>
+                    <div class="msg-time">Ora</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- SEZIONE 2: VISIONE & INVESTIMENTI -->
-    <div id="visione" class="section-content">
+    <!-- SEZIONE 2: ROOM & OPINIONI -->
+    <div id="room" class="section-content">
         <div class="card">
-            <h3 style="font-size: 15px; margin-bottom: 8px;">📈 Future Investments & Visione</h3>
-            <p style="font-size: 12px; color: #fef3c7; margin-bottom: 10px;">Pianificazione e strategie d'investimento per il futuro.</p>
-            <textarea id="inputVisione" placeholder="Annota strategie, idee finanziarie o la tua visione..."></textarea>
-            <button class="action-btn" onclick="aggiungiContenuto('visione')">FISSA LA STRATEGIA 🌟</button>
-            <div class="msg-list" id="listVisione">
+            <h3 style="font-size: 15px; margin-bottom: 8px;">🗣️ Room di Scambio Opinioni</h3>
+            <p style="font-size: 12px; color: #fef3c7; margin-bottom: 10px;">Spazio aperto di dibattito culturale, filosofico e musicale.</p>
+            <textarea id="inputRoom" placeholder="Esprimi la tua opinione o apri un dibattito nella Room..."></textarea>
+            <button class="action-btn" onclick="aggiungiContenuto('room', 'Room Opinioni', 'Open Mic')">ENTRA NEL DIBATTITO 🎙️</button>
+            <div class="msg-list" id="listRoom">
                 <div class="msg-item">
-                    <div>[Investimenti] Pianificazione strategica e visione a lungo termine.</div>
-                    <div class="msg-time">Obiettivo attivo</div>
+                    <div class="msg-header"><span>Community Open Mic</span><span>💬</span></div>
+                    <div class="msg-text">La vera connessione nasce dal confronto autentico e pulito tra le persone.</div>
+                    <div class="msg-time">Active Room</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- SEZIONE 3: STAND-UP & JOINT -->
-    <div id="standup" class="section-content">
+    <!-- SEZIONE 3: MESSAGGISTICA STYLE INSTAGRAM -->
+    <div id="direct" class="section-content">
         <div class="card">
-            <h3 style="font-size: 15px; margin-bottom: 8px;">🎤 Stand-Up & Lab</h3>
-            <p style="font-size: 12px; color: #fbcfe8; margin-bottom: 10px; font-style: italic;">Accettazione di giunti all'inizio del pezzo e barre libere.</p>
-            <textarea id="inputStandup" placeholder="La tua barra, il tuo pezzo comico o la tua idea brillante..."></textarea>
-            <button class="action-btn" onclick="aggiungiContenuto('standup')">CONDIVIDI LA VIBE 🚀</button>
-            <div class="msg-list" id="listStandup">
+            <h3 style="font-size: 15px; margin-bottom: 8px;">💬 Messaggistica Direct Style</h3>
+            <p style="font-size: 12px; color: #fbcfe8; margin-bottom: 10px;">Scambio rapido di messaggi e risposte in tempo reale.</p>
+            <textarea id="inputDirect" placeholder="Scrivi un messaggio diretto al network..."></textarea>
+            <button class="action-btn" onclick="aggiungiContenuto('direct', 'Direct Message', 'IG Style')">INVIA MESSAGGIO 🚀</button>
+            <div class="msg-list" id="listDirect">
                 <div class="msg-item">
-                    <div>[Stand-Up] Accettazione di giunti all'inizio del pezzo e barre libere.</div>
-                    <div class="msg-time">Laboratorio attivo</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- SEZIONE 4: PILLOLE DI VITA / SOFFERENZA E CRESCITA -->
-    <div id="pillole" class="section-content">
-        <div class="card">
-            <h3 style="font-size: 15px; margin-bottom: 8px;">💊 Pillole di Vita / Sofferenza e Crescita</h3>
-            <p style="font-size: 12px; color: #fda4af; margin-bottom: 10px;">Analisi profonda: quanto il dolore serve per la crescita (Daily Reminder).</p>
-            <textarea id="inputPillole" placeholder="Scrivi la pillola di oggi, l'analisi del vissuto e la crescita..."></textarea>
-            <button class="action-btn" onclick="aggiungiContenuto('pillole')">REGISTRA PILLOLA 🧬</button>
-            <div class="msg-list" id="listPillole">
-                <div class="msg-item">
-                    <div>[Pillola di Vita] Il dolore trasformato in consapevolezza è il motore della vera crescita.</div>
-                    <div class="msg-time">Daily Reminder</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- SEZIONE 5: LIBRO ADHD & VITA PER GLI ALTRI -->
-    <div id="libro" class="section-content">
-        <div class="card">
-            <h3 style="font-size: 15px; margin-bottom: 8px;">📚 Libro ADHD & La Vita per gli Altri</h3>
-            <p style="font-size: 12px; color: #fde047; margin-bottom: 10px;">Organizzazione contenuti libro, ADHD e storia reale per aiutare gli altri ed evitare inutili sofferenze.</p>
-            <textarea id="inputLibro" placeholder="Organizza contenuti per il libro o scrivi la storia reale..."></textarea>
-            <button class="action-btn" onclick="aggiungiContenuto('libro')">SALVA NEL CAPITOLO ✍️</button>
-            <div class="msg-list" id="listLibro">
-                <div class="msg-item">
-                    <div>[Libro ADHD / Vita] Raccontare la storia in modo reale e breve per aiutare gli altri ed evitare inutili sofferenze.</div>
-                    <div class="msg-time">Progetto attivo</div>
+                    <div class="msg-header"><span>Network Sintonizzato</span><span>✨</span></div>
+                    <div class="msg-text">Tutti collegati sulla stessa frequenza positiva.</div>
+                    <div class="msg-time">Live Feed</div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Gestione installazione PWA Ufficiale
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
@@ -169,7 +140,7 @@
                     deferredPrompt = null;
                 });
             } else {
-                alert("Per installare l'app ufficialmente sul telefono, apri il menu del browser (i tre puntini in alto a destra) e seleziona 'Aggiungi a schermata Home' o 'Installa app'.");
+                alert("Per installare l'app, apri il menu del browser (i tre puntini in alto a destra) e seleziona 'Aggiungi a schermata Home' o 'Installa app'.");
             }
         }
 
@@ -181,13 +152,14 @@
         }
 
         function caricaDati() {
-            ['riflessioni', 'visione', 'standup', 'pillole', 'libro'].forEach(sezione => {
-                const salvati = JSON.parse(localStorage.getItem('spot_it_ufficiale_' + sezione) || '[]');
+            ['flusso', 'room', 'direct'].forEach(sezione => {
+                const salvati = JSON.parse(localStorage.getItem('spot_it_culture_' + sezione) || '[]');
                 const listEl = document.getElementById('list' + sezione.charAt(0).toUpperCase() + sezione.slice(1));
                 if (salvati.length > 0) {
                     listEl.innerHTML = salvati.map(m => `
                         <div class="msg-item">
-                            <div>${m.testo}</div>
+                            <div class="msg-header"><span>${m.autore}</span><span>${m.tag}</span></div>
+                            <div class="msg-text">${m.testo}</div>
                             <div class="msg-time">${m.ora}</div>
                         </div>
                     `).join('');
@@ -195,39 +167,32 @@
             });
         }
 
-        function aggiungiContenuto(sezione) {
+        function aggiungiContenuto(sezione, autore, tag) {
             const inputEl = document.getElementById('input' + sezione.charAt(0).toUpperCase() + sezione.slice(1));
             const testo = inputEl.value.trim();
             if (!testo) return;
 
             const oraCorrente = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            let salvati = JSON.parse(localStorage.getItem('spot_it_ufficiale_' + sezione) || '[]');
-            
-            let prefisso = sezione === 'riflessioni' ? '[Riflessione & Arte]' : 
-                           sezione === 'visione' ? '[Investimenti & Visione]' : 
-                           sezione === 'standup' ? '[Stand-Up & Joint]' : 
-                           sezione === 'pillole' ? '[Pillola & Crescita]' : '[Libro ADHD & Vita]';
+            let salvati = JSON.parse(localStorage.getItem('spot_it_culture_' + sezione) || '[]');
                            
-            salvati.unshift({ testo: `${prefisso} ${testo}`, ora: oraCorrente });
+            salvati.unshift({ autore, tag, testo, ora: oraCorrente });
             
-            localStorage.setItem('spot_it_ufficiale_' + sezione, JSON.stringify(salvati));
+            localStorage.setItem('spot_it_culture_' + sezione, JSON.stringify(salvati));
             inputEl.value = '';
             caricaDati();
         }
 
         function eseguiBackup() {
             const tutto = {
-                riflessioni: localStorage.getItem('spot_it_ufficiale_riflessioni'),
-                visione: localStorage.getItem('spot_it_ufficiale_visione'),
-                standup: localStorage.getItem('spot_it_ufficiale_standup'),
-                pillole: localStorage.getItem('spot_it_ufficiale_pillole'),
-                libro: localStorage.getItem('spot_it_ufficiale_libro')
+                flusso: localStorage.getItem('spot_it_culture_flusso'),
+                room: localStorage.getItem('spot_it_culture_room'),
+                direct: localStorage.getItem('spot_it_culture_direct')
             };
             const blob = new Blob([JSON.stringify(tutto, null, 2)], { type: 'json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'backup-app-ufficiale.json';
+            a.download = 'backup-culture-app.json';
             a.click();
         }
 
