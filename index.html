@@ -3,57 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Spot-it. Universe - Ultimate Experience</title>
-    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Spot-it.%20Universe%22%2C%22short_name%22%3A%22Spot-it%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23151026%22%2C%22theme_color%22%3A%22%237c3aed%22%7D">
+    <title>Spot-it. Universe</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: #0d0918; color: #fff; padding: 12px; max-width: 480px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
+        body { background-color: #151026; color: #fff; padding: 15px; max-width: 480px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
         
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 4px; }
-        h1 { font-size: 18px; color: #fce7f3; font-weight: 800; letter-spacing: -0.5px; }
-        .subtitle { font-size: 9px; color: #fb923c; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        h1 { font-size: 20px; color: #fce7f3; }
+        .subtitle { font-size: 10px; color: #fb923c; letter-spacing: 1px; }
         
-        .header-actions { display: flex; gap: 6px; }
-        .top-btn { background: #3b0764; border: 1px solid #7c3aed; color: #fbcfe8; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; }
-        .top-btn.install { background: linear-gradient(135deg, #f59e0b, #ec4899); color: #151026; border: none; display: none; }
-
-        .card { background: #181135; border: 1px solid #5b21b6; border-radius: 14px; padding: 14px; margin-bottom: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.3); }
-        .vibe-box { display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #4f46e5, #9333ea, #ec4899); color: #fff; border: none; }
-        .vibe-tag { background: #f59e0b; padding: 4px 10px; border-radius: 20px; font-size: 11px; color: #151026; font-weight: 900; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+        .card { background: #1e143b; border: 1px solid #5b21b6; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        .vibe-box { display: flex; justify-content: space-between; align-items: center; background: linear-gradient(90deg, #4f46e5, #ec4899); color: #fff; border: none; }
+        .vibe-tag { background: #f59e0b; padding: 4px 10px; border-radius: 20px; font-size: 12px; color: #151026; font-weight: bold; }
         
-        .nav-tabs { display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+        .nav-tabs { display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
         .nav-tabs::-webkit-scrollbar { display: none; }
-        .tab-btn { background: #261b4e; border: 1px solid #6d28d9; color: #e2e8f0; padding: 8px 12px; border-radius: 10px; font-size: 11px; cursor: pointer; white-space: nowrap; font-weight: 700; transition: all 0.2s; flex-shrink: 0; }
-        .tab-btn.active { background: linear-gradient(135deg, #f59e0b, #ec4899); color: #151026; border-color: transparent; box-shadow: 0 4px 12px rgba(236,72,153,0.4); }
+        .tab-btn { background: #3b0764; border: 1px solid #7c3aed; color: #fbcfe8; padding: 8px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; white-space: nowrap; font-weight: 600; flex-shrink: 0; }
+        .tab-btn.active { background: linear-gradient(135deg, #f59e0b, #ec4899); color: #151026; border-color: #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
         
         .section-content { display: none; flex-direction: column; gap: 10px; flex-grow: 1; }
         .section-content.active { display: flex; animation: fadeIn 0.25s ease-out; }
         
-        /* Stile chat IG-level / Feed interattivo */
-        .feed-container { display: flex; flex-direction: column; gap: 10px; max-height: 380px; overflow-y: auto; padding-right: 2px; }
-        .post-card { background: #1f1542; border: 1px solid #4c1d95; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
-        .post-header { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #a78bfa; font-weight: 600; }
-        .post-body { font-size: 13px; color: #f8fafc; line-height: 1.4; word-break: break-word; }
+        textarea { width: 100%; background: #151026; border: 1px solid #7c3aed; color: #fff; border-radius: 8px; padding: 10px; font-size: 14px; margin-top: 10px; resize: none; height: 90px; outline: none; }
+        button.action-btn { width: 100%; background: linear-gradient(135deg, #f472b6, #fb923c); border: none; color: #151026; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 10px rgba(244,114,182,0.2); }
         
-        .post-actions { display: flex; align-items: center; gap: 12px; border-top: 1px solid #2e2163; padding-top: 8px; margin-top: 2px; }
-        .action-icon-btn { background: none; border: none; color: #cbd5e1; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: 600; }
-        .action-icon-btn:active { transform: scale(0.9); }
+        .msg-list { margin-top: 12px; max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        .msg-item { background: #312e81; padding: 12px; border-radius: 8px; font-size: 13px; border-left: 3px solid #fb923c; line-height: 1.4; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .msg-time { font-size: 10px; color: #fcd34d; margin-top: 6px; text-align: right; }
         
-        .comment-section { background: #130d26; border-radius: 8px; padding: 8px; margin-top: 4px; display: flex; flex-direction: column; gap: 6px; border-left: 2px solid #ec4899; }
-        .comment-item { font-size: 11px; color: #e2e8f0; display: flex; justify-content: space-between; gap: 6px; }
-        .comment-input-box { display: flex; gap: 4px; margin-top: 4px; }
-        .comment-input { flex-grow: 1; background: #0d0918; border: 1px solid #5b21b6; border-radius: 6px; padding: 6px 8px; color: #fff; font-size: 11px; }
-        .comment-send-btn { background: #7c3aed; border: none; color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; }
+        .art-quote { font-style: italic; color: #fda4af; font-size: 13px; margin-bottom: 10px; border-left: 2px solid #fda4af; padding-left: 8px; }
 
-        textarea { width: 100%; background: #110c24; border: 1px solid #7c3aed; color: #fff; border-radius: 10px; padding: 10px; font-size: 13px; resize: none; height: 75px; outline: none; }
-        textarea:focus { border-color: #ec4899; }
-        
-        .main-action-btn { width: 100%; background: linear-gradient(135deg, #f472b6, #fb923c); border: none; color: #151026; padding: 11px; border-radius: 10px; font-weight: 900; font-size: 13px; cursor: pointer; box-shadow: 0 4px 12px rgba(244,114,182,0.3); }
-        
-        .ai-box { background: #23174d; border: 1px solid #a855f7; border-radius: 10px; padding: 10px; font-size: 12px; color: #f3e8ff; line-height: 1.4; display: flex; flex-direction: column; gap: 6px; }
-        .vr-screen { background: #090514; border: 2px dashed #7c3aed; border-radius: 12px; padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; min-height: 160px; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -61,116 +41,108 @@
     <header>
         <div>
             <h1>Spot-it. Universe</h1>
-            <div class="subtitle">Ultimate Experience</div>
+            <div class="subtitle">POSITIVITY & CREATION</div>
         </div>
-        <div class="header-actions">
-            <button class="top-btn install" id="installBtn" onclick="installaPWA()">📲 Installa</button>
-            <button class="top-btn" onclick="eseguiBackup()">💾 Backup</button>
-        </div>
+        <button style="width: auto; padding: 6px 12px; font-size: 11px; background: #f59e0b; border: none; color: #151026; border-radius: 6px; font-weight: bold;" onclick="eseguiBackup()">Backup</button>
     </header>
 
     <div class="card vibe-box">
         <div>
-            <div style="font-size: 10px; color: #fef3c7; font-weight: 600;">In play:</div>
-            <div style="font-size: 12px; font-weight: bold;">Luv Sic - Nujabes & Shing02</div>
+            <div style="font-size: 11px; color: #fef3c7;">In play:</div>
+            <div style="font-size: 13px; font-weight: bold;">Luv Sic - Nujabes & Shing02</div>
         </div>
         <div class="vibe-tag">Vibe: 100% Positiva</div>
     </div>
 
     <div class="nav-tabs">
-        <button class="tab-btn active" onclick="cambiaTab('feed', this)">🔥 IG Feed & Chat</button>
-        <button class="tab-btn" onclick="cambiaTab('standup', this)">🎙️ Stand-Up & Giunti</button>
-        <button class="tab-btn" onclick="cambiaTab('ai', this)">⚡ IA & Pillole</button>
-        <button class="tab-btn" onclick="cambiaTab('vr', this)">🥽 VR Immersiva</button>
-        <button class="tab-btn" onclick="cambiaTab('libri', this)">📚 Libro ADHD</button>
+        <button class="tab-btn active" onclick="cambiaTab('riflessioni', this)">💭 Riflessioni & Arte</button>
+        <button class="tab-btn" onclick="cambiaTab('visione', this)">🌟 Visione & Investimenti</button>
+        <button class="tab-btn" onclick="cambiaTab('standup', this)">🎤 Stand-Up & Joint</button>
+        <button class="tab-btn" onclick="cambiaTab('pillole', this)">💊 Pillole di Vita</button>
+        <button class="tab-btn" onclick="cambiaTab('libro', this)">📖 Libro ADHD</button>
     </div>
 
-    <!-- SEZIONE 1: FEED & MESSAGGISTICA LIVE -->
-    <div id="feed" class="section-content active">
-        <div class="card" style="margin-bottom:0; flex-grow:1; display:flex; flex-direction:column;">
-            <div style="font-size: 13px; font-weight: bold; margin-bottom: 8px; color: #f472b6;">🌐 Flusso Globale & Condivisione</div>
-            <textarea id="inputFeed" placeholder="Esprimi un pensiero reale, una storia o una pillola di vita..."></textarea>
-            <button class="main-action-btn" style="margin-top: 8px;" onclick="aggiungiPost()">CONDIVIDI NEL FEED 🚀</button>
-            
-            <div class="feed-container" id="feedList" style="margin-top: 10px;">
-                <!-- I post verranno caricati dinamicamente -->
+    <!-- SEZIONE 1: RIFLESSIONI & ARTE -->
+    <div id="riflessioni" class="section-content active">
+        <div class="card">
+            <div class="art-quote">"L'arte e la condivisione sono luce che alimenta l'anima."</div>
+            <h3 style="font-size: 15px; margin-bottom: 8px;">Condividi la Luce</h3>
+            <textarea id="inputRiflessioni" placeholder="Condividi un'ispirazione, un'opera d'arte o un pensiero positivo..."></textarea>
+            <button class="action-btn" onclick="aggiungiContenuto('riflessioni')">DIFFONDI NEL FLUSSO 💖</button>
+            <div class="msg-list" id="listRiflessioni">
+                <div class="msg-item">
+                    <div>[Riflessione] Ogni passo è luce. Anche nel buio, la direzione è chiara.</div>
+                    <div class="msg-time">Flusso di positività</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- SEZIONE 2: STAND-UP & LAB -->
+    <!-- SEZIONE 2: VISIONE & INVESTIMENTI -->
+    <div id="visione" class="section-content">
+        <div class="card">
+            <h3 style="font-size: 15px; margin-bottom: 8px;">📈 Future Investments & Visione</h3>
+            <p style="font-size: 12px; color: #fef3c7; margin-bottom: 10px;">Pianificazione e strategie d'investimento per il futuro.</p>
+            <textarea id="inputVisione" placeholder="Annota strategie, idee finanziarie o la tua visione..."></textarea>
+            <button class="action-btn" onclick="aggiungiContenuto('visione')">FISSA LA STRATEGIA 🌟</button>
+            <div class="msg-list" id="listVisione">
+                <div class="msg-item">
+                    <div>[Investimenti] Pianificazione strategica e visione a lungo termine.</div>
+                    <div class="msg-time">Obiettivo attivo</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEZIONE 3: STAND-UP & JOINT -->
     <div id="standup" class="section-content">
-        <div class="card" style="margin-bottom:0; flex-grow:1; display:flex; flex-direction:column;">
-            <div style="font-size: 13px; font-weight: bold; margin-bottom: 4px; color: #fb923c;">🎤 Stand-Up & Accettazione</div>
-            <div style="font-size: 11px; color: #cbd5e1; margin-bottom: 8px; font-style: italic;">"Accettazione di giunti all'inizio del pezzo e barre libere."</div>
-            <textarea id="inputStandup" placeholder="Scrivi la tua barra, il tuo pezzo comico o l'apertura con il joint..."></textarea>
-            <button class="main-action-btn" style="margin-top: 8px;" onclick="aggiungiStandup()">REGISTRA NEL LAB 🌿</button>
-            
-            <div class="feed-container" id="standupList" style="margin-top: 10px;"></div>
-        </div>
-    </div>
-
-    <!-- SEZIONE 3: IA & PILLOLE DI VITA -->
-    <div id="ai" class="section-content">
-        <div class="card" style="margin-bottom:0;">
-            <div style="font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #a855f7;">⚡ Assistente IA Veloce & Preciso</div>
-            <textarea id="inputAi" placeholder="Chiedi analisi sulla crescita, strategie d'investimento o riflessioni..."></textarea>
-            <button class="main-action-btn" style="margin-top: 8px;" onclick="chiediAi()">INTERROGA IA 🤖</button>
-            
-            <div class="ai-box" id="aiResponseBox" style="margin-top: 10px;">
-                <div>🤖 <strong>IA Coach:</strong> Pronto a elaborare strategie, analisi sul dolore e crescita personale in tempo reale. Fai una domanda!</div>
+        <div class="card">
+            <h3 style="font-size: 15px; margin-bottom: 8px;">🎤 Stand-Up & Lab</h3>
+            <p style="font-size: 12px; color: #fbcfe8; margin-bottom: 10px; font-style: italic;">Accettazione di giunti all'inizio del pezzo e barre libere.</p>
+            <textarea id="inputStandup" placeholder="La tua barra, il tuo pezzo comico o la tua idea brillante..."></textarea>
+            <button class="action-btn" onclick="aggiungiContenuto('standup')">CONDIVIDI LA VIBE 🚀</button>
+            <div class="msg-list" id="listStandup">
+                <div class="msg-item">
+                    <div>[Stand-Up] Accettazione di giunti e barre libere.</div>
+                    <div class="msg-time">Laboratorio attivo</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- SEZIONE 4: VR IMMERSIVA -->
-    <div id="vr" class="section-content">
-        <div class="card" style="margin-bottom:0; flex-grow:1; display:flex; flex-direction:column;">
-            <div style="font-size: 13px; font-weight: bold; margin-bottom: 8px; color: #38bdf8;">🥽 Modalità VR & Spazio Mentale</div>
-            <div class="vr-screen">
-                <div style="font-size: 28px;">🌌</div>
-                <div style="font-size: 13px; font-weight: bold; color: #f0abfc;">Ambiente Immersivo Attivo</div>
-                <div style="font-size: 11px; color: #94a3b8;">Visualizzazione focalizzata per la scrittura del libro e distacco totale dai rumori esterni.</div>
-                <button class="top-btn" style="background:#0284c7; border:none; color:#fff; margin-top:6px;" onclick="attivaFullscreenVR()">ATTIVO SCHERMO INTERO 👁️</button>
+    <!-- SEZIONE 4: PILLOLE DI VITA / SOFFERENZA E CRESCITA -->
+    <div id="pillole" class="section-content">
+        <div class="card">
+            <h3 style="font-size: 15px; margin-bottom: 8px;">💊 Pillole di Vita / Sofferenza e Crescita</h3>
+            <p style="font-size: 12px; color: #fda4af; margin-bottom: 10px;">Analisi profonda: quanto il dolore serve per la crescita (Daily Reminder).</p>
+            <textarea id="inputPillole" placeholder="Scrivi la pillola di oggi, l'analisi del vissuto e la crescita..."></textarea>
+            <button class="action-btn" onclick="aggiungiContenuto('pillole')">REGISTRA PILLOLA 🧬</button>
+            <div class="msg-list" id="listPillole">
+                <div class="msg-item">
+                    <div>[Pillola di Vita] Il dolore trasformato in consapevolezza è il motore della vera crescita.</div>
+                    <div class="msg-time">Daily Reminder</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- SEZIONE 5: LIBRO ADHD & PILASTRI -->
-    <div id="libri" class="section-content">
-        <div class="card" style="margin-bottom:0;">
-            <div style="font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #facc15;">📚 Gestione Libro ADHD & Pillole</div>
-            <textarea id="inputLibro" placeholder="Organizza contenuti per il libro o appnota una pillola di crescita..."></textarea>
-            <button class="main-action-btn" style="margin-top: 8px;" onclick="salvaContenutoLibro()">SALVA CAPITOLO / PILLOLA ✍️</button>
-            
-            <div class="feed-container" id="libroList" style="margin-top: 10px;"></div>
+    <!-- SEZIONE 5: LIBRO ADHD & VITA PER GLI ALTRI -->
+    <div id="libro" class="section-content">
+        <div class="card">
+            <h3 style="font-size: 15px; margin-bottom: 8px;">📚 Libro ADHD & La Vita per gli Altri</h3>
+            <p style="font-size: 12px; color: #fde047; margin-bottom: 10px;">Organizzazione contenuti libro, ADHD e storia reale per aiutare gli altri ed evitare inutili sofferenze.</p>
+            <textarea id="inputLibro" placeholder="Organizza contenuti per il libro o scrivi la storia reale..."></textarea>
+            <button class="action-btn" onclick="aggiungiContenuto('libro')">SALVA NEL CAPITOLO ✍️</button>
+            <div class="msg-list" id="listLibro">
+                <div class="msg-item">
+                    <div>[Libro ADHD / Vita] Raccontare la storia in modo reale e breve per aiutare gli altri.</div>
+                    <div class="msg-time">Progetto attivo</div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Gestione Installazione PWA
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            document.getElementById('installBtn').style.display = 'block';
-        });
-
-        function installaPWA() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        document.getElementById('installBtn').style.display = 'none';
-                    }
-                    deferredPrompt = null;
-                });
-            } else {
-                alert("Per installare l'app, apri il menu del browser (i tre puntini in alto a destra) e seleziona 'Aggiungi a schermata Home' o 'Installa app'.");
-            }
-        }
-
-        // Cambio Tab fluido
         function cambiaTab(tabId, btn) {
             document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -178,162 +150,54 @@
             btn.classList.add('active');
         }
 
-        // Inizializzazione dati LocalStorage avanzati con supporto commenti e like
         function caricaDati() {
-            caricaFeed();
-            caricaStandup();
-            caricaLibro();
-        }
-
-        // --- FEED & MESSAGGISTICA IG-STYLE ---
-        function aggiungiPost() {
-            const txt = document.getElementById('inputFeed').value.trim();
-            if (!txt) return;
-            let posts = JSON.parse(localStorage.getItem('spot_feed') || '[]');
-            posts.unshift({ id: Date.now(), testo: txt, ora: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), likes: 0, liked: false, commenti: [] });
-            localStorage.getItem('spot_feed', JSON.stringify(posts));
-            localStorage.setItem('spot_feed', JSON.stringify(posts));
-            document.getElementById('inputFeed').value = '';
-            caricaFeed();
-        }
-
-        function caricaFeed() {
-            const posts = JSON.parse(localStorage.getItem('spot_feed') || '[{"id":1, "testo":"🔥 Benvenuti nel nuovo universo interattivo definitivo. Condividiamo la nostra storia per aiutare gli altri.", "ora":"02:50", "likes": 4, "liked": false, "commenti": [{"testo": "Spettacolo puro!", "ora": "02:52"}]}]');
-            const container = document.getElementById('feedList');
-            container.innerHTML = posts.map(p => `
-                <div class="post-card">
-                    <div class="post-header">
-                        <span>✨ Creator Universe</span>
-                        <span>${p.ora}</span>
-                    </div>
-                    <div class="post-body">${p.testo}</div>
-                    <div class="post-actions">
-                        <button class="action-icon-btn" onclick="toggleLike(${p.id})">${p.liked ? '❤️' : '🤍'} ${p.likes}</button>
-                        <button class="action-icon-btn" onclick="toggleCommentBox(${p.id})">💬 Commenti (${p.commenti.length})</button>
-                    </div>
-                    <div class="comment-section" id="comments-${p.id}" style="display:none;">
-                        <div style="max-height:100px; overflow-y:auto; display:flex; flex-direction:column; gap:4px;">
-                            ${p.commenti.map(c => `<div class="comment-item"><span>${c.testo}</span><span style="font-size:9px; color:#94a3b8;">${c.ora}</span></div>`).join('')}
+            ['riflessioni', 'visione', 'standup', 'pillole', 'libro'].forEach(sezione => {
+                const salvati = JSON.parse(localStorage.getItem('spot_it_' + sezione) || '[]');
+                const listEl = document.getElementById('list' + sezione.charAt(0).toUpperCase() + sezione.slice(1));
+                if (salvati.length > 0) {
+                    listEl.innerHTML = salvati.map(m => `
+                        <div class="msg-item">
+                            <div>${m.testo}</div>
+                            <div class="msg-time">${m.ora}</div>
                         </div>
-                        <div class="comment-input-box">
-                            <input type="text" class="comment-input" id="c-input-${p.id}" placeholder="Rispondi al commento...">
-                            <button class="comment-send-btn" onclick="aggiungiCommento(${p.id})">Invia</button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function toggleLike(id) {
-            let posts = JSON.parse(localStorage.getItem('spot_feed') || '[]');
-            posts = posts.map(p => {
-                if(p.id === id) {
-                    p.liked = !p.liked;
-                    p.likes += p.liked ? 1 : -1;
+                    `).join('');
                 }
-                return p;
             });
-            localStorage.setItem('spot_feed', JSON.stringify(posts));
-            caricaFeed();
         }
 
-        function toggleCommentBox(id) {
-            const box = document.getElementById(`comments-${id}`);
-            box.style.display = box.style.display === 'none' ? 'flex' : 'none';
-        }
+        function aggiungiContenuto(sezione) {
+            const inputEl = document.getElementById('input' + sezione.charAt(0).toUpperCase() + sezione.slice(1));
+            const testo = inputEl.value.trim();
+            if (!testo) return;
 
-        function aggiungiCommento(id) {
-            const input = document.getElementById(`c-input-${id}`);
-            const val = input.value.trim();
-            if(!val) return;
-            let posts = JSON.parse(localStorage.getItem('spot_feed') || '[]');
-            posts = posts.map(p => {
-                if(p.id === id) {
-                    p.commenti.push({ testo: val, ora: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
-                }
-                return p;
-            });
-            localStorage.setItem('spot_feed', JSON.stringify(posts));
-            caricaFeed();
-            document.getElementById(`comments-${id}`).style.display = 'flex';
-        }
-
-        // --- STAND UP & LAB ---
-        function aggiungiStandup() {
-            const txt = document.getElementById('inputStandup').value.trim();
-            if(!txt) return;
-            let list = JSON.parse(localStorage.getItem('spot_standup') || '[]');
-            list.unshift({ testo: `🌿 [Joint & Stand-Up] ${txt}`, ora: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
-            localStorage.setItem('spot_standup', JSON.stringify(list));
-            document.getElementById('inputStandup').value = '';
-            caricaStandup();
-        }
-
-        function caricaStandup() {
-            const list = JSON.parse(localStorage.getItem('spot_standup') || '[{"testo":"🌿 [Joint & Stand-Up] Accettazione di giunti all\'inizio e via con le barre libere.", "ora":"02:50"}]');
-            document.getElementById('standupList').innerHTML = list.map(item => `
-                <div class="post-card">
-                    <div class="post-body">${item.testo}</div>
-                    <div style="font-size:9px; color:#fcd34d; text-align:right;">${item.ora}</div>
-                </div>
-            `).join('');
-        }
-
-        // --- IA VELOCE E PRECISA ---
-        function chiediAi() {
-            const q = document.getElementById('inputAi').value.trim();
-            if(!q) return;
-            const box = document.getElementById('aiResponseBox');
-            box.innerHTML = `<div>🤖 <strong>IA Coach:</strong> Analizzando la richiesta "${q}"... Elaborazione strategica focalizzata sulla crescita e sul superamento del dolore in corso...</div>`;
+            const oraCorrente = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            let salvati = JSON.parse(localStorage.getItem('spot_it_' + sezione) || '[]');
             
-            setTimeout(() => {
-                box.innerHTML = `<div>✨ <strong>Risposta IA (Precisa & Veloce):</strong> Per quanto riguarda "${q}", la chiave risiede nell'unire la struttura per l'ADHD alla visione d'insieme. Il dolore affrontato con lucidità diventa carburante puro per il tuo libro e per aiutare gli altri senza sofferenze inutili. Continua a spingere!</div>`;
-            }, 600);
+            let prefisso = sezione === 'riflessioni' ? '[Riflessione & Arte]' : 
+                           sezione === 'visione' ? '[Investimenti & Visione]' : 
+                           sezione === 'standup' ? '[Stand-Up & Joint]' : 
+                           sezione === 'pillole' ? '[Pillola & Crescita]' : '[Libro ADHD & Vita]';
+                           
+            salvati.unshift({ testo: `${prefisso} ${testo}`, ora: oraCorrente });
+            
+            localStorage.setItem('spot_it_' + sezione, JSON.stringify(salvati));
+            inputEl.value = '';
+            caricaDati();
         }
 
-        // --- LIBRO & PILLOLE ---
-        function salvaContenutoLibro() {
-            const txt = document.getElementById('inputLibro').value.trim();
-            if(!txt) return;
-            let list = JSON.parse(localStorage.getItem('spot_libro') || '[]');
-            list.unshift({ testo: `📖 ${txt}`, ora: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
-            localStorage.setItem('spot_libro', JSON.stringify(list));
-            document.getElementById('inputLibro').value = '';
-            caricaLibro();
-        }
-
-        function caricaLibro() {
-            const list = JSON.parse(localStorage.getItem('spot_libro') || '[{"testo":"📖 [Pilastro ADHD & Vita] Organizzazione contenuti capitolo iniziale.", "ora":"02:50"}]');
-            document.getElementById('libroList').innerHTML = list.map(item => `
-                <div class="post-card">
-                    <div class="post-body">${item.testo}</div>
-                    <div style="font-size:9px; color:#fcd34d; text-align:right;">${item.ora}</div>
-                </div>
-            `).join('');
-        }
-
-        // VR Fullscreen Mode
-        function attivaFullscreenVR() {
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
-            } else if (document.documentElement.webkitRequestFullscreen) {
-                document.documentElement.webkitRequestFullscreen();
-            }
-            alert("🥽 Modalità VR Immersiva attivata. Concentrazione totale sul flusso creativo.");
-        }
-
-        // Backup Completo
         function eseguiBackup() {
-            const data = {
-                feed: localStorage.getItem('spot_feed'),
-                standup: localStorage.getItem('spot_standup'),
-                libro: localStorage.getItem('spot_libro')
+            const tutto = {
+                riflessioni: localStorage.getItem('spot_it_riflessioni'),
+                visione: localStorage.getItem('spot_it_visione'),
+                standup: localStorage.getItem('spot_it_standup'),
+                pillole: localStorage.getItem('spot_it_pillole'),
+                libro: localStorage.getItem('spot_it_libro')
             };
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'json' });
+            const blob = new Blob([JSON.stringify(tutto, null, 2)], { type: 'json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'backup-spot-it-universe.json';
+            a.download = 'backup-ufficiale-spot-it.json';
             a.click();
         }
 
