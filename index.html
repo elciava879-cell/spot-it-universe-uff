@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Spot-it. Universe - Autonomous Evolving Engine</title>
+    <title>Spot-it. Universe - Secure Autonomous Evolving Engine</title>
     <!-- Firebase SDK Compat -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
@@ -20,7 +20,7 @@
             --text-muted: #94a3b8;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; user-select: none; }
         body { background-color: var(--bg-color); color: var(--text-main); padding: 12px; max-width: 480px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; transition: background 0.8s ease; }
         
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 0 4px; }
@@ -35,7 +35,6 @@
         .vibe-box { display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #4f46e5, #9333ea, var(--neon-pink)); color: #fff; border: none; }
         .vibe-tag { background: #f59e0b; padding: 4px 10px; border-radius: 20px; font-size: 11px; color: #151026; font-weight: 900; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
         
-        /* Autonomous Evolution HUD Card */
         .evolution-hud { background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(56,189,248,0.15)); border: 1px solid var(--neon-cyan); display: flex; justify-content: space-between; align-items: center; }
         .boost-btn { background: linear-gradient(135deg, var(--neon-cyan), #9333ea); color: #000; border: none; padding: 8px 12px; border-radius: 8px; font-weight: bold; font-size: 11px; cursor: pointer; box-shadow: 0 0 10px rgba(56,189,248,0.4); }
         .boost-btn:active { transform: scale(0.95); }
@@ -55,7 +54,7 @@
         .feed-container { display: flex; flex-direction: column; gap: 10px; max-height: 380px; overflow-y: auto; padding-right: 2px; }
         .post-card { background: #1f1542; border: 1px solid #4c1d95; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
         .post-header { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #a78bfa; font-weight: 600; }
-        .post-body { font-size: 13px; color: #f8fafc; line-height: 1.4; word-break: break-word; }
+        .post-body { font-size: 13px; color: #f8fafc; line-height: 1.4; word-break: break-word; user-select: text; }
         
         .post-img { width: 100%; border-radius: 8px; max-height: 200px; object-fit: cover; margin-top: 4px; cursor: pointer; }
         .view-once-badge { background: #db2777; color: #fff; font-size: 9px; padding: 2px 6px; border-radius: 4px; display: inline-block; font-weight: bold; }
@@ -64,22 +63,22 @@
         .action-icon-btn { background: none; border: none; color: #cbd5e1; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: 600; }
         
         .comment-section { background: #130d26; border-radius: 8px; padding: 8px; margin-top: 4px; display: flex; flex-direction: column; gap: 6px; border-left: 2px solid var(--neon-pink); }
-        .comment-item { font-size: 11px; color: #e2e8f0; display: flex; justify-content: space-between; gap: 6px; }
+        .comment-item { font-size: 11px; color: #e2e8f0; display: flex; justify-content: space-between; gap: 6px; user-select: text; }
         .comment-input-box { display: flex; gap: 4px; margin-top: 4px; }
-        .comment-input { flex-grow: 1; background: #0d0918; border: 1px solid #5b21b6; border-radius: 6px; padding: 6px 8px; color: #fff; font-size: 11px; }
+        .comment-input { flex-grow: 1; background: #0d0918; border: 1px solid #5b21b6; border-radius: 6px; padding: 6px 8px; color: #fff; font-size: 11px; user-select: text; }
         .comment-send-btn { background: var(--neon-purple); border: none; color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; }
 
-        textarea { width: 100%; background: #110c24; border: 1px solid var(--neon-purple); color: #fff; border-radius: 10px; padding: 10px; font-size: 13px; resize: none; height: 75px; outline: none; }
+        textarea { width: 100%; background: #110c24; border: 1px solid var(--neon-purple); color: #fff; border-radius: 10px; padding: 10px; font-size: 13px; resize: none; height: 75px; outline: none; user-select: text; }
         textarea:focus { border-color: var(--neon-pink); }
         
         .file-input-label { display: block; background: #261b4e; border: 1px dashed var(--neon-cyan); color: var(--neon-cyan); text-align: center; padding: 8px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; margin-bottom: 6px; }
         
         .main-action-btn { width: 100%; background: linear-gradient(135deg, #f472b6, #fb923c); border: none; color: #151026; padding: 11px; border-radius: 10px; font-weight: 900; font-size: 13px; cursor: pointer; box-shadow: 0 4px 12px rgba(244,114,182,0.3); }
         
-        .ai-box { background: #23174d; border: 1px solid #a855f7; border-radius: 10px; padding: 10px; font-size: 12px; color: #f3e8ff; line-height: 1.4; display: flex; flex-direction: column; gap: 6px; }
+        .ai-box { background: #23174d; border: 1px solid #a855f7; border-radius: 10px; padding: 10px; font-size: 12px; color: #f3e8ff; line-height: 1.4; display: flex; flex-direction: column; gap: 6px; user-select: text; }
         .vr-screen { background: #090514; border: 2px dashed var(--neon-purple); border-radius: 12px; padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; min-height: 160px; }
 
-        .mutation-log { font-family: monospace; font-size: 10px; background: rgba(0,0,0,0.5); border: 1px dashed var(--neon-emerald); color: var(--neon-emerald); padding: 8px; border-radius: 8px; max-height: 80px; overflow-y: auto; margin-top: 6px; }
+        .mutation-log { font-family: monospace; font-size: 10px; background: rgba(0,0,0,0.5); border: 1px dashed var(--neon-emerald); color: var(--neon-emerald); padding: 8px; border-radius: 8px; max-height: 80px; overflow-y: auto; margin-top: 6px; user-select: text; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -89,7 +88,7 @@
     <header>
         <div>
             <h1>Spot-it. Universe</h1>
-            <div class="subtitle">Autonomous Evolving Engine</div>
+            <div class="subtitle">Secure Autonomous Engine</div>
         </div>
         <div class="header-actions">
             <button class="top-btn install" id="installBtn" onclick="installaPWA()">📲 Installa</button>
@@ -97,10 +96,8 @@
         </div>
     </header>
 
-    <!-- STATO CONNESSIONE E WIFI AUTOMATICO -->
     <div id="netStatus" class="connection-status online">🟢 Connesso (Online & Cache Sync Attiva)</div>
 
-    <!-- MOTORE DI EVOLUZIONE AUTONOMA HUD -->
     <div class="card evolution-hud">
         <div>
             <div style="font-size: 9px; color: var(--neon-cyan); font-weight: 700; text-transform: uppercase;">Vision Index</div>
@@ -127,11 +124,10 @@
         <button class="tab-btn" onclick="cambiaTab('evolution', this)">🧬 Log Evoluzione</button>
     </div>
 
-    <!-- SEZIONE 1: FEED & MESSAGGISTICA LIVE (CON SUPPORTO FOTO VIEW-ONCE E OFFLINE CACHE) -->
     <div id="feed" class="section-content active">
         <div class="card" style="margin-bottom:0; flex-grow:1; display:flex; flex-direction:column;">
             <div style="font-size: 13px; font-weight: bold; margin-bottom: 8px; color: #f472b6;">🌐 Flusso Globale, Messaggi Offline & Foto 1-View</div>
-            <textarea id="inputFeed" placeholder="Esprimi un pensiero reale, una storia o un messaggio (leggibile anche offline)..."></textarea>
+            <textarea id="inputFeed" placeholder="Esprimi un pensiero reale, una storia o un messaggio..."></textarea>
             
             <label class="file-input-label" for="inputFoto">📷 Aggiungi Foto (Visibile una sola volta)</label>
             <input type="file" id="inputFoto" accept="image/*" style="display:none;" onchange="anteprimaFoto(this)">
@@ -143,7 +139,6 @@
         </div>
     </div>
 
-    <!-- SEZIONE 2: STAND-UP & LAB -->
     <div id="standup" class="section-content">
         <div class="card" style="margin-bottom:0; flex-grow:1; display:flex; flex-direction:column;">
             <div style="font-size: 13px; font-weight: bold; margin-bottom: 4px; color: #fb923c;">🎤 Stand-Up & Accettazione</div>
@@ -155,7 +150,6 @@
         </div>
     </div>
 
-    <!-- SEZIONE 3: IA & PILLOLE DI VITA -->
     <div id="ai" class="section-content">
         <div class="card" style="margin-bottom:0;">
             <div style="font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #a855f7;">⚡ Assistente IA Veloce & Preciso</div>
@@ -168,7 +162,6 @@
         </div>
     </div>
 
-    <!-- SEZIONE 4: VR IMMERSIVA -->
     <div id="vr" class="section-content">
         <div class="card" style="margin-bottom:0; flex-grow:1; display:flex; flex-direction:column;">
             <div style="font-size: 13px; font-weight: bold; margin-bottom: 8px; color: #38bdf8;">🥽 Modalità VR & Spazio Mentale</div>
@@ -181,7 +174,6 @@
         </div>
     </div>
 
-    <!-- SEZIONE 5: FILOSOFIA & ARTE DEL BENESSERE (ex ADHD) -->
     <div id="filosofia" class="section-content">
         <div class="card" style="margin-bottom:0;">
             <div style="font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #facc15;">🧘 Filosofia & Arte del Benessere</div>
@@ -192,7 +184,6 @@
         </div>
     </div>
 
-    <!-- SEZIONE 6: LOG DI EVOLUZIONE AUTONOMA -->
     <div id="evolution" class="section-content">
         <div class="card" style="margin-bottom:0;">
             <div style="font-size: 13px; font-weight: bold; margin-bottom: 6px; color: var(--neon-emerald);">🧬 Registro Autonomo & Mutazioni</div>
@@ -204,6 +195,20 @@
     </div>
 
     <script>
+        // --- PROTEZIONE ANTI-COPIA E ANTI-ISPEZIONE ---
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('keydown', function(event) {
+            if (
+                event.keyCode === 123 || 
+                (event.ctrlKey && event.shiftKey && (event.keyCode === 73 || event.keyCode === 74)) || 
+                (event.ctrlKey && event.keyCode === 85)
+            ) {
+                event.preventDefault();
+                return false;
+            }
+        });
+
+        // Firebase Config
         const firebaseConfig = {
             databaseURL: "https://spot-it-universo-default-rtdb.firebaseio.com/"
         };
@@ -213,7 +218,6 @@
         }
         const db = firebase.database();
 
-        // --- GESTIONE CONNESSIONE E WIFI AUTOMATICO (OFFLINE SYNC) ---
         function aggionaStatoRete() {
             const statusEl = document.getElementById('netStatus');
             if (navigator.onLine) {
@@ -228,7 +232,6 @@
         window.addEventListener('online', aggionaStatoRete);
         window.addEventListener('offline', aggionaStatoRete);
 
-        // --- MOTORE DI EVOLUZIONE AUTONOMA ---
         let currentVision = parseFloat(localStorage.getItem('spot_it_vision')) || 1.00;
 
         function updateVisionUI() {
@@ -261,9 +264,9 @@
                 logMutation("Mutation triggered: High-frequency conduits unlocked.");
             } else if(currentVision >= 5.00) {
                 document.documentElement.style.setProperty('--neon-pink', '#00ff66');
-                logMutation("Mutation triggered: Singularity Tier reached. Maximum optimization active.");
+                logMutation("Mutation triggered: Singularity Tier reached.");
             } else {
-                logMutation("Vision elevated to " + currentVision.toFixed(2) + "x. Runtime optimized.");
+                logMutation("Vision elevated to " + currentVision.toFixed(2) + "x.");
             }
 
             if(navigator.onLine) {
@@ -291,7 +294,7 @@
                     deferredPrompt = null;
                 });
             } else {
-                alert("Per installare l'app, apri il menu del browser (i tre puntini in alto a destra) e seleziona 'Aggiungi a schermata Home' o 'Installa app'.");
+                alert("Per installare l'app, apri il menu del browser e seleziona 'Aggiungi a schermata Home' o 'Installa app'.");
             }
         }
 
@@ -309,7 +312,6 @@
             caricaLibro();
         }
 
-        // --- GESTIONE FOTO VIEW-ONCE ---
         let base64FotoTemp = null;
         function anteprimaFoto(input) {
             if (input.files && input.files[0]) {
@@ -326,7 +328,7 @@
             let posts = JSON.parse(localStorage.getItem('spot_feed') || '[]');
             posts = posts.map(p => {
                 if(p.id === postId) {
-                    p.foto Visualizzata = true;
+                    p.fotoVisualizzata = true;
                 }
                 return p;
             });
@@ -353,7 +355,6 @@
             posts.unshift(nuovoPost);
             localStorage.setItem('spot_feed', JSON.stringify(posts));
 
-            // Sincronizzazione Firebase se online
             if(navigator.onLine) {
                 db.ref('spot_feed_sync').push(nuovoPost);
             } else {
@@ -376,7 +377,7 @@
                     db.ref('spot_feed_sync').push(item);
                 });
                 localStorage.removeItem('spot_offline_queue');
-                logMutation("Offline queue successfully synchronized via WiFi/Network.");
+                logMutation("Offline queue successfully synchronized.");
             }
         }
 
@@ -476,10 +477,10 @@
             const q = document.getElementById('inputAi').value.trim();
             if(!q) return;
             const box = document.getElementById('aiResponseBox');
-            box.innerHTML = `<div>🤖 <strong>IA Coach:</strong> Analizzando "${q}" in modalità offline/online...</div>`;
+            box.innerHTML = `<div>🤖 <strong>IA Coach:</strong> Analizzando "${q}"...</div>`;
             
             setTimeout(() => {
-                box.innerHTML = `<div>✨ <strong>Risposta IA:</strong> La filosofia del benessere interiore e l'equilibrio offline ti permettono di mantenere la visione lucida anche senza connessione WiFi.</div>`;
+                box.innerHTML = `<div>✨ <strong>Risposta IA:</strong> La filosofia del benessere interiore e l'equilibrio offline ti permettono di mantenere la visione lucida.</div>`;
             }, 600);
         }
 
