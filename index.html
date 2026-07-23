@@ -88,7 +88,7 @@
     <header>
         <div>
             <h1>Spot-it. Universe</h1>
-            <div class="subtitle">Secure Autonomous Engine</div>
+            <div class="subtitle">Secure Network & Cloud Engine</div>
         </div>
         <div class="header-actions">
             <button class="top-btn install" id="installBtn" onclick="installaPWA()">📲 Installa</button>
@@ -96,7 +96,7 @@
         </div>
     </header>
 
-    <div id="netStatus" class="connection-status online">🟢 Connesso (Online & Cache Sync Attiva)</div>
+    <div id="netStatus" class="connection-status online">🟢 Connessione Cloud Stabile (Sincronizzazione Live)</div>
 
     <div class="card evolution-hud">
         <div>
@@ -126,14 +126,14 @@
 
     <div id="feed" class="section-content active">
         <div class="card" style="margin-bottom:0; flex-grow:1; display:flex; flex-direction:column;">
-            <div style="font-size: 13px; font-weight: bold; margin-bottom: 8px; color: #f472b6;">🌐 Flusso Globale, Messaggi Offline & Foto 1-View</div>
+            <div style="font-size: 13px; font-weight: bold; margin-bottom: 8px; color: #f472b6;">🌐 Flusso Cloud Globale, Foto 1-View & Sincronizzazione Solida</div>
             <textarea id="inputFeed" placeholder="Esprimi un pensiero reale, una storia o un messaggio..."></textarea>
             
-            <label class="file-input-label" for="inputFoto">📷 Aggiungi Foto (Visibile una sola volta)</label>
+            <label class="file-input-label" for="inputFoto">📷 Aggiungi Foto Cloud (Visibile una sola volta)</label>
             <input type="file" id="inputFoto" accept="image/*" style="display:none;" onchange="anteprimaFoto(this)">
-            <div id="previewContainer" style="font-size:11px; color:var(--neon-cyan); margin-bottom:6px; display:none;">📸 Foto caricata (pronta per visualizzazione unica)</div>
+            <div id="previewContainer" style="font-size:11px; color:var(--neon-cyan); margin-bottom:6px; display:none;">📸 Foto compressa e pronta per la rete</div>
 
-            <button class="main-action-btn" style="margin-top: 4px;" onclick="aggiungiPost()">CONDIVIDI NEL FEED 🚀</button>
+            <button class="main-action-btn" style="margin-top: 4px;" onclick="aggiungiPost()">CONDIVIDI NEL CLOUD 🚀</button>
             
             <div class="feed-container" id="feedList" style="margin-top: 10px;"></div>
         </div>
@@ -208,7 +208,7 @@
             }
         });
 
-        // Firebase Config
+        // --- CONFIGURAZIONE FIREBASE & ENGINE DI RETE SOLIDO ---
         const firebaseConfig = {
             databaseURL: "https://spot-it-universo-default-rtdb.firebaseio.com/"
         };
@@ -218,19 +218,55 @@
         }
         const db = firebase.database();
 
-        function aggionaStatoRete() {
+        // Controllo di connettività internet in tempo reale con feedback visivo avanzato
+        function aggiornaStatoRete() {
             const statusEl = document.getElementById('netStatus');
             if (navigator.onLine) {
                 statusEl.className = "connection-status online";
-                statusEl.innerHTML = "🟢 Connesso (Online & WiFi Sync Attivo)";
-                sincronizzaOfflineQueue();
+                statusEl.innerHTML = "🟢 Connessione Cloud Stabile (Sincronizzazione Live)";
+                sincronizzaCodaOffline();
             } else {
                 statusEl.className = "connection-status offline";
-                statusEl.innerHTML = "🔴 Offline (Lettura messaggi da cache locale & WiFi storage)";
+                statusEl.innerHTML = "🔴 Assenza di Rete (Modalità Sicura Locale & Coda Attiva)";
             }
         }
-        window.addEventListener('online', aggionaStatoRete);
-        window.addEventListener('offline', aggionaStatoRete);
+        window.addEventListener('online', aggiornaStatoRete);
+        window.addEventListener('offline', aggiornaStatoRete);
+
+        // --- GESTIONE OTTIMIZZATA DELLA CODA OFFLINE E SINCRONIZZAZIONE AUTOMATICA ---
+        function sincronizzaCodaOffline() {
+            let offlineQueue = JSON.parse(localStorage.getItem('spot_offline_queue') || '[]');
+            if (offlineQueue.length > 0 && navigator.onLine) {
+                const item = offlineQueue.shift(); // Prende il primo elemento in coda
+                db.ref('spot_feed_sync').push(item, (error) => {
+                    if (!error) {
+                        localStorage.setItem('spot_offline_queue', JSON.stringify(offlineQueue));
+                        logMutation("Elemento in coda sincronizzato con successo nel Cloud.");
+                        // Continua a svuotare la coda se ci sono altri elementi
+                        if (offlineQueue.length > 0) sincronizzaCodaOffline();
+                    }
+                });
+            }
+        }
+
+        // Ascolto in tempo reale dei post dal Cloud Firebase con aggiornamento automatico della UI
+        function attivaAscoltoCloud() {
+            db.ref('spot_feed_sync').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    let cloudPosts = [];
+                    Object.keys(data).forEach(key => {
+                        cloudPosts.push({ firebaseKey: key, ...data[key] });
+                    });
+                    // Ordina dal più recente
+                    cloudPosts.sort((a, b) => b.id - a.id);
+                    localStorage.setItem('spot_feed', JSON.stringify(cloudPosts));
+                    caricaFeed();
+                }
+            }, (error) => {
+                console.warn("Errore di sincronizzazione cloud, fallback su cache locale:", error);
+            });
+        }
 
         let currentVision = parseFloat(localStorage.getItem('spot_it_vision')) || 1.00;
 
@@ -306,33 +342,64 @@
         }
 
         function caricaDati() {
-            aggionaStatoRete();
+            aggiornaStatoRete();
             caricaFeed();
             caricaStandup();
             caricaLibro();
+            attivaAscoltoCloud();
         }
 
+        // --- SISTEMA ROBUSTO DI COMPRESSIONE E GESTIONE FOTO (VIEW-ONCE) ---
         let base64FotoTemp = null;
         function anteprimaFoto(input) {
             if (input.files && input.files[0]) {
+                const file = input.files[0];
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    base64FotoTemp = e.target.result;
-                    document.getElementById('previewContainer').style.display = 'block';
+                    // Compressione automatica dell'immagine per garantire invii stabili anche con connessioni lente
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        let width = img.width;
+                        let height = img.height;
+                        const maxDim = 800; // Limite massimo per stabilità di rete
+
+                        if (width > height && width > maxDim) {
+                            height *= maxDim / width;
+                            width = maxDim;
+                        } else if (height > maxDim) {
+                            width *= maxDim / height;
+                            height = maxDim;
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+                        base64FotoTemp = canvas.toDataURL('image/jpeg', 0.7); // Compressione JPEG al 70%
+
+                        document.getElementById('previewContainer').style.display = 'block';
+                    }
                 }
-                reader.readAsDataURL(input.files[0]);
+                reader.readAsDataURL(file);
             }
         }
 
-        function apriFotoUnaSolaVolta(postId) {
+        function apriFotoUnaSolaVolta(postId, firebaseKey) {
             let posts = JSON.parse(localStorage.getItem('spot_feed') || '[]');
             posts = posts.map(p => {
-                if(p.id === postId) {
+                if(p.id === postId || p.firebaseKey === firebaseKey) {
                     p.fotoVisualizzata = true;
                 }
                 return p;
             });
             localStorage.setItem('spot_feed', JSON.stringify(posts));
+            
+            // Aggiorna anche sul Cloud se disponibile
+            if(navigator.onLine && firebaseKey) {
+                db.ref('spot_feed_sync/' + firebaseKey).update({ fotoVisualizzata: true });
+            }
             caricaFeed();
         }
 
@@ -340,7 +407,6 @@
             const txt = document.getElementById('inputFeed').value.trim();
             if (!txt && !base64FotoTemp) return;
             
-            let posts = JSON.parse(localStorage.getItem('spot_feed') || '[]');
             const nuovoPost = {
                 id: Date.now(),
                 testo: txt,
@@ -352,45 +418,45 @@
                 commenti: []
             };
 
-            posts.unshift(nuovoPost);
-            localStorage.setItem('spot_feed', JSON.stringify(posts));
-
+            // Invio solido: se online invia direttamente a Firebase, altrimenti memorizza in coda locale
             if(navigator.onLine) {
-                db.ref('spot_feed_sync').push(nuovoPost);
+                db.ref('spot_feed_sync').push(nuovoPost, (error) => {
+                    if (error) {
+                        salvaInCodaLocale(nuovoPost);
+                    }
+                });
             } else {
-                let offlineQueue = JSON.parse(localStorage.getItem('spot_offline_queue') || '[]');
-                offlineQueue.push(nuovoPost);
-                localStorage.setItem('spot_offline_queue', JSON.stringify(offlineQueue));
+                salvaInCodaLocale(nuovoPost);
             }
 
             document.getElementById('inputFeed').value = '';
             document.getElementById('inputFoto').value = '';
             document.getElementById('previewContainer').style.display = 'none';
             base64FotoTemp = null;
-            caricaFeed();
         }
 
-        function sincronizzaOfflineQueue() {
+        function salvaInCodaLocale(post) {
+            let posts = JSON.parse(localStorage.getItem('spot_feed') || '[]');
+            posts.unshift(post);
+            localStorage.setItem('spot_feed', JSON.stringify(posts));
+            
             let offlineQueue = JSON.parse(localStorage.getItem('spot_offline_queue') || '[]');
-            if(offlineQueue.length > 0 && navigator.onLine) {
-                offlineQueue.forEach(item => {
-                    db.ref('spot_feed_sync').push(item);
-                });
-                localStorage.removeItem('spot_offline_queue');
-                logMutation("Offline queue successfully synchronized.");
-            }
+            offlineQueue.push(post);
+            localStorage.setItem('spot_offline_queue', JSON.stringify(offlineQueue));
+            caricaFeed();
+            logMutation("Post salvato in locale (in attesa di connessione stabile).");
         }
 
         function caricaFeed() {
-            const posts = JSON.parse(localStorage.getItem('spot_feed') || '[{"id":1, "testo":"🔥 Benvenuti nel nuovo ecosistema offline-ready con foto a visualizzazione singola.", "ora":"02:50", "likes": 4, "liked": false, "commenti": [{"testo": "Spettacolo puro!", "ora": "02:52"}]}]');
+            const posts = JSON.parse(localStorage.getItem('spot_feed') || '[{"id":1, "testo":"🔥 Benvenuti nel cloud sicuro di Spot-it Universe.", "ora":"02:50", "likes": 4, "liked": false, "commenti": [{"testo": "Connessione solida attiva!", "ora": "02:52"}]}]');
             const container = document.getElementById('feedList');
             container.innerHTML = posts.map(p => {
                 let fotoHTML = '';
                 if(p.foto) {
                     if(!p.fotoVisualizzata) {
-                        fotoHTML = `<div style="margin-top:6px;"><span class="view-once-badge">📸 FOTO (VISIBILE UNA SOLA VOLTA)</span><br><img src="${p.foto}" class="post-img" onclick="apriFotoUnaSolaVolta(${p.id})" title="Clicca per visualizzare ed eliminare"></div>`;
+                        fotoHTML = `<div style="margin-top:6px;"><span class="view-once-badge">📸 FOTO CLOUD (VISIBILE UNA SOLA VOLTA)</span><br><img src="${p.foto}" class="post-img" onclick="apriFotoUnaSolaVolta(${p.id}, '${p.firebaseKey || ''}')" title="Clicca per visualizzare ed eliminare"></div>`;
                     } else {
-                        fotoHTML = `<div style="margin-top:6px; font-size:11px; color:#94a3b8; font-style:italic;">🔒 Foto a visualizzazione singola già aperta ed eliminata dalla cache.</div>`;
+                        fotoHTML = `<div style="margin-top:6px; font-size:11px; color:#94a3b8; font-style:italic;">🔒 Foto a visualizzazione singola già aperta ed eliminata.</div>`;
                     }
                 }
 
@@ -403,28 +469,31 @@
                     <div class="post-body">${p.testo}</div>
                     ${fotoHTML}
                     <div class="post-actions">
-                        <button class="action-icon-btn" onclick="toggleLike(${p.id})">${p.liked ? '❤️' : '🤍'} ${p.likes}</button>
-                        <button class="action-icon-btn" onclick="toggleCommentBox(${p.id})">💬 Commenti (${p.commenti.length})</button>
+                        <button class="action-icon-btn" onclick="toggleLike(${p.id}, '${p.firebaseKey || ''}')">${p.liked ? '❤️' : '🤍'} ${p.likes}</button>
+                        <button class="action-icon-btn" onclick="toggleCommentBox(${p.id})">💬 Commenti (${p.commenti ? p.commenti.length : 0})</button>
                     </div>
                     <div class="comment-section" id="comments-${p.id}" style="display:none;">
                         <div style="max-height:100px; overflow-y:auto; display:flex; flex-direction:column; gap:4px;">
-                            ${p.commenti.map(c => `<div class="comment-item"><span>${c.testo}</span><span style="font-size:9px; color:#94a3b8;">${c.ora}</span></div>`).join('')}
+                            ${p.commenti ? p.commenti.map(c => `<div class="comment-item"><span>${c.testo}</span><span style="font-size:9px; color:#94a3b8;">${c.ora}</span></div>`).join('') : ''}
                         </div>
                         <div class="comment-input-box">
                             <input type="text" class="comment-input" id="c-input-${p.id}" placeholder="Rispondi...">
-                            <button class="comment-send-btn" onclick="aggiungiCommento(${p.id})">Invia</button>
+                            <button class="comment-send-btn" onclick="aggiungiCommento(${p.id}, '${p.firebaseKey || ''}')">Invia</button>
                         </div>
                     </div>
                 </div>
             `;}).join('');
         }
 
-        function toggleLike(id) {
+        function toggleLike(id, firebaseKey) {
             let posts = JSON.parse(localStorage.getItem('spot_feed') || '[]');
             posts = posts.map(p => {
-                if(p.id === id) {
+                if(p.id === id || (firebaseKey && p.firebaseKey === firebaseKey)) {
                     p.liked = !p.liked;
                     p.likes += p.liked ? 1 : -1;
+                    if(navigator.onLine && firebaseKey) {
+                        db.ref('spot_feed_sync/' + firebaseKey).update({ likes: p.likes });
+                    }
                 }
                 return p;
             });
@@ -437,14 +506,20 @@
             box.style.display = box.style.display === 'none' ? 'flex' : 'none';
         }
 
-        function aggiungiCommento(id) {
+        function aggiungiCommento(id, firebaseKey) {
             const input = document.getElementById(`c-input-${id}`);
             const val = input.value.trim();
             if(!val) return;
+            
             let posts = JSON.parse(localStorage.getItem('spot_feed') || '[]');
             posts = posts.map(p => {
-                if(p.id === id) {
+                if(p.id === id || (firebaseKey && p.firebaseKey === firebaseKey)) {
+                    if(!p.commenti) p.commenti = [];
                     p.commenti.push({ testo: val, ora: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
+                    
+                    if(navigator.onLine && firebaseKey) {
+                        db.ref('spot_feed_sync/' + firebaseKey).update({ commenti: p.commenti });
+                    }
                 }
                 return p;
             });
@@ -480,7 +555,7 @@
             box.innerHTML = `<div>🤖 <strong>IA Coach:</strong> Analizzando "${q}"...</div>`;
             
             setTimeout(() => {
-                box.innerHTML = `<div>✨ <strong>Risposta IA:</strong> La filosofia del benessere interiore e l'equilibrio offline ti permettono di mantenere la visione lucida.</div>`;
+                box.innerHTML = `<div>✨ <strong>Risposta IA:</strong> La rete solida e la sincronizzazione cloud mantengono il tuo ecosistema sempre reattivo e sicuro.</div>`;
             }, 600);
         }
 
