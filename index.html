@@ -3,50 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Spot-it. Universe - Real-Time Live & Rooms</title>
-    <!-- Firebase SDK per sincronizzazione cloud in tempo reale tra tutti i dispositivi -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <title>Spot-it. Universe</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: #0f0a1a; color: #fff; padding: 15px; max-width: 480px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
         
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        h1 { font-size: 19px; color: #fce7f3; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        h1 { font-size: 20px; color: #fce7f3; }
         .subtitle { font-size: 10px; color: #38bdf8; letter-spacing: 1px; font-weight: bold; }
         
-        .header-btns { display: flex; gap: 6px; }
-        .top-btn { background: #3b0764; border: 1px solid #7c3aed; color: #fbcfe8; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; }
-        
-        .card { background: #181032; border: 1px solid #6d28d9; border-radius: 12px; padding: 14px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+        .card { background: #181032; border: 1px solid #6d28d9; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .vibe-box { display: flex; justify-content: space-between; align-items: center; background: linear-gradient(90deg, #4f46e5, #0284c7); color: #fff; border: none; }
         .vibe-tag { background: #22c55e; padding: 4px 10px; border-radius: 20px; font-size: 11px; color: #0f0a1a; font-weight: bold; }
         
-        .nav-tabs { display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+        .nav-tabs { display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
         .nav-tabs::-webkit-scrollbar { display: none; }
-        .tab-btn { background: #3b0764; border: 1px solid #7c3aed; color: #fbcfe8; padding: 8px 10px; border-radius: 8px; font-size: 11px; cursor: pointer; white-space: nowrap; font-weight: 600; flex-shrink: 0; }
-        .tab-btn.active { background: linear-gradient(135deg, #0284c7, #9333ea); color: #fff; border-color: #38bdf8; box-shadow: 0 2px 8px rgba(56,189,248,0.3); }
+        .tab-btn { background: #3b0764; border: 1px solid #7c3aed; color: #fbcfe8; padding: 8px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; white-space: nowrap; font-weight: 600; flex-shrink: 0; }
+        .tab-btn.active { background: linear-gradient(135deg, #0284c7, #9333ea); color: #fff; border-color: #38bdf8; }
         
         .section-content { display: none; flex-direction: column; gap: 10px; flex-grow: 1; }
-        .section-content.active { display: flex; animation: fadeIn 0.2s ease-out; }
+        .section-content.active { display: flex; }
         
-        input[type="text"], textarea { width: 100%; background: #0f0a1a; border: 1px solid #7c3aed; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; margin-top: 6px; outline: none; }
-        textarea { resize: none; height: 75px; }
+        textarea { width: 100%; background: #0f0a1a; border: 1px solid #7c3aed; color: #fff; border-radius: 8px; padding: 10px; font-size: 14px; margin-top: 8px; resize: none; height: 85px; outline: none; }
+        button.action-btn { width: 100%; background: linear-gradient(135deg, #0284c7, #9333ea); border: none; color: #fff; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 10px; }
         
-        button.action-btn { width: 100%; background: linear-gradient(135deg, #0284c7, #9333ea); border: none; color: #fff; padding: 11px; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; margin-top: 8px; box-shadow: 0 4px 10px rgba(147,51,234,0.3); }
-        
-        .msg-list { margin-top: 10px; max-height: 260px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 4px; }
-        .msg-item { background: #23174a; padding: 10px 12px; border-radius: 10px; font-size: 13px; border-left: 3px solid #38bdf8; line-height: 1.4; display: flex; flex-direction: column; gap: 3px; }
-        .msg-header { display: flex; justify-content: space-between; font-size: 10px; color: #38bdf8; font-weight: bold; }
+        .msg-list { margin-top: 12px; max-height: 280px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .msg-item { background: #23174a; padding: 12px; border-radius: 10px; font-size: 13px; border-left: 3px solid #38bdf8; line-height: 1.4; display: flex; flex-direction: column; gap: 4px; }
+        .msg-header { display: flex; justify-content: space-between; font-size: 11px; color: #38bdf8; font-weight: bold; }
         .msg-text { color: #f3f4f6; word-break: break-word; }
         .msg-time { font-size: 9px; color: #9ca3af; text-align: right; }
         
-        .art-quote { font-style: italic; color: #cbd5e1; font-size: 12px; margin-bottom: 8px; border-left: 2px solid #38bdf8; padding-left: 8px; }
-        
-        .user-setup { display: flex; gap: 6px; margin-bottom: 8px; align-items: center; }
-        .user-setup input { margin-top: 0; font-weight: bold; color: #38bdf8; }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .user-setup { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
+        .user-setup input { width: 100%; background: #0f0a1a; border: 1px solid #7c3aed; color: #38bdf8; border-radius: 8px; padding: 8px; font-size: 13px; font-weight: bold; outline: none; }
     </style>
 </head>
 <body>
@@ -54,86 +42,67 @@
     <header>
         <div>
             <h1>Spot-it. Universe</h1>
-            <div class="subtitle">REAL-TIME CULTURE & CONNECTIONS</div>
-        </div>
-        <div class="header-btns">
-            <button class="top-btn" onclick="eseguiBackup()">💾 Info</button>
+            <div class="subtitle">STREET FLOW & ROOMS</div>
         </div>
     </header>
 
     <div class="card vibe-box">
         <div>
-            <div style="font-size: 10px; color: #e2e8f0;">Live Stream Audio:</div>
-            <div style="font-size: 12px; font-weight: bold;">Luv Sic - Nujabes & Shing02</div>
+            <div style="font-size: 11px; color: #e2e8f0;">In play:</div>
+            <div style="font-size: 13px; font-weight: bold;">Luv Sic - Nujabes & Shing02</div>
         </div>
-        <div class="vibe-tag" id="connectionStatus">● Live Cloud</div>
+        <div class="vibe-tag">Locale Attivo</div>
     </div>
 
     <div class="user-setup">
-        <span style="font-size: 11px; color: #cbd5e1; white-space: nowrap;">Il tuo Nome / Tag:</span>
-        <input type="text" id="usernameInput" value="StreetExplorer" onchange="salvaUsername()">
+        <span style="font-size: 12px; color: #cbd5e1; white-space: nowrap;">Nome:</span>
+        <input type="text" id="usernameInput" value="StreetExplorer" oninput="salvaUsername()">
     </div>
 
     <div class="nav-tabs">
-        <button class="tab-btn active" onclick="cambiaTab('flusso', this)">🔥 Il Flusso & Arte</button>
-        <button class="tab-btn" onclick="cambiaTab('rooms', this)">🗣️ Room di Scambio</button>
+        <button class="tab-btn active" onclick="cambiaTab('flusso', this)">🔥 Il Flusso</button>
+        <button class="tab-btn" onclick="cambiaTab('rooms', this)">🗣️ Room Opinioni</button>
         <button class="tab-btn" onclick="cambiaTab('direct', this)">💬 Direct Style</button>
     </div>
 
-    <!-- SEZIONE 1: IL FLUSSO & ARTE -->
+    <!-- SEZIONE 1 -->
     <div id="flusso" class="section-content active">
         <div class="card">
-            <div class="art-quote">"Musica, cultura, street, hip hop e filosofia: connessioni pure che migliorano il flusso dei pensieri."</div>
-            <h3 style="font-size: 14px; margin-bottom: 6px;">Condividi nel Network</h3>
-            <textarea id="inputFlusso" placeholder="Lancia una barra, un'idea o una vibrazione positiva..."></textarea>
-            <button class="action-btn" onclick="inviaMessaggio('flusso')">DIFFONDI NEL FLUSSO 🚀</button>
-            <div class="msg-list" id="listFlusso">
-                <div class="msg-item"><div class="msg-header"><span>System</span><span>Live</span></div><div class="msg-text">Caricamento flusso in tempo reale...</div></div>
-            </div>
+            <h3 style="font-size: 15px; margin-bottom: 8px;">Condividi nel Flusso</h3>
+            <textarea id="inputFlusso" placeholder="Scrivi un pensiero o un'ispirazione..."></textarea>
+            <button class="action-btn" onclick="inviaMessaggio('flusso')">PUBBLICA NEL FLUSSO 🚀</button>
+            <div class="msg-list" id="listFlusso"></div>
         </div>
     </div>
 
-    <!-- SEZIONE 2: ROOM DI SCAMBIO OPINIONI -->
+    <!-- SEZIONE 2 -->
     <div id="rooms" class="section-content">
         <div class="card">
-            <h3 style="font-size: 14px; margin-bottom: 6px;">🗣️ Open Room & Opinioni</h3>
-            <p style="font-size: 11px; color: #cbd5e1; margin-bottom: 8px;">Spazio di dibattito aperto globale in tempo reale.</p>
-            <textarea id="inputRooms" placeholder="Scrivi la tua opinione nella Room aperta a tutti..."></textarea>
-            <button class="action-btn" onclick="inviaMessaggio('rooms')">ENTRA NELLA ROOM 🎙️</button>
-            <div class="msg-list" id="listRooms">
-                <div class="msg-item"><div class="msg-header"><span>System</span><span>Room</span></div><div class="msg-text">Sintonizzazione room in corso...</div></div>
-            </div>
+            <h3 style="font-size: 15px; margin-bottom: 8px;">🗣️ Room di Scambio</h3>
+            <textarea id="inputRooms" placeholder="Apri un dibattito o di' la tua..."></textarea>
+            <button class="action-btn" onclick="inviaMessaggio('rooms')">INVIA NELLA ROOM 🎙️</button>
+            <div class="msg-list" id="listRooms"></div>
         </div>
     </div>
 
-    <!-- SEZIONE 3: MESSAGGISTICA STYLE INSTAGRAM -->
+    <!-- SEZIONE 3 -->
     <div id="direct" class="section-content">
         <div class="card">
-            <h3 style="font-size: 14px; margin-bottom: 6px;">💬 Direct Style Network</h3>
-            <p style="font-size: 11px; color: #cbd5e1; margin-bottom: 8px;">Messaggi diretti condivisi istantaneamente con tutti i dispositivi connessi.</p>
-            <textarea id="inputDirect" placeholder="Invia un messaggio diretto stile IG..."></textarea>
-            <button class="action-btn" onclick="inviaMessaggio('direct')">INVIA DIRECT 💌</button>
-            <div class="msg-list" id="listDirect">
-                <div class="msg-item"><div class="msg-header"><span>System</span><span>Direct</span></div><div class="msg-text">Connessione direct attiva...</div></div>
-            </div>
+            <h3 style="font-size: 15px; margin-bottom: 8px;">💬 Direct Style</h3>
+            <textarea id="inputDirect" placeholder="Scrivi un messaggio diretto..."></textarea>
+            <button class="action-btn" onclick="inviaMessaggio('direct')">INVIA MESSAGGIO 💌</button>
+            <div class="msg-list" id="listDirect"></div>
         </div>
     </div>
 
     <script>
-        const firebaseConfig = {
-            databaseURL: "https://spot-it-universe-default-rtdb.europe-west1.firebasedatabase.app/"
-        };
-        
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
         function salvaUsername() {
-            const nome = document.getElementById('usernameInput').value.trim();
-            if(nome) localStorage.setItem('spot_it_username', nome);
+            const nome = document.getElementById('usernameInput').value;
+            localStorage.setItem('spot_username', nome);
         }
 
-        if(localStorage.getItem('spot_it_username')) {
-            document.getElementById('usernameInput').value = localStorage.getItem('spot_it_username');
+        if(localStorage.getItem('spot_username')) {
+            document.getElementById('usernameInput').value = localStorage.getItem('spot_username');
         }
 
         function cambiaTab(tabId, btn) {
@@ -143,61 +112,43 @@
             btn.classList.add('active');
         }
 
-        ['flusso', 'rooms', 'direct'].forEach(sezione => {
-            const ref = db.ref('spot_it_' + sezione);
-            ref.on('value', (snapshot) => {
-                const data = snapshot.val();
+        function caricaMessaggi() {
+            ['flusso', 'rooms', 'direct'].forEach(sezione => {
+                const dati = JSON.parse(localStorage.getItem('spot_data_' + sezione) || '[]');
                 const listEl = document.getElementById('list' + sezione.charAt(0).toUpperCase() + sezione.slice(1));
                 
-                if (!data) {
-                    listEl.innerHTML = '<div class="msg-item"><div class="msg-header"><span>Info</span><span>Net</span></div><div class="msg-text">Nessun messaggio ancora. Scrivi il primo!</div></div>';
+                if (dati.length === 0) {
+                    listEl.innerHTML = '<div class="msg-item"><div class="msg-header"><span>Info</span><span>System</span></div><div class="msg-text">Nessun messaggio salvato. Scrivi il primo!</div></div>';
                     return;
                 }
 
-                let html = '';
-                const keys = Object.keys(data).reverse();
-                keys.forEach(key => {
-                    const m = data[key];
-                    html += `
-                        <div class="msg-item">
-                            <div class="msg-header"><span>${escapeHtml(m.autore)}</span><span>LIVE</span></div>
-                            <div class="msg-text">${escapeHtml(m.testo)}</div>
-                            <div class="msg-time">${m.ora}</div>
-                        </div>
-                    `;
-                });
-                listEl.innerHTML = html;
-            }, (error) => {
-                document.getElementById('connectionStatus').style.backgroundColor = '#ef4444';
-                document.getElementById('connectionStatus').innerText = '● Offline Mode';
+                listEl.innerHTML = dati.map(m => `
+                    <div class="msg-item">
+                        <div class="msg-header"><span>${m.autore}</span><span>POST</span></div>
+                        <div class="msg-text">${m.testo}</div>
+                        <div class="msg-time">${m.ora}</div>
+                    </div>
+                `).join('');
             });
-        });
+        }
 
         function inviaMessaggio(sezione) {
             const inputEl = document.getElementById('input' + sezione.charAt(0).toUpperCase() + sezione.slice(1));
             const testo = inputEl.value.trim();
             if (!testo) return;
 
-            const autore = document.getElementById('usernameInput').value.trim() || 'Anonymous';
+            const autore = document.getElementById('usernameInput').value || 'Anonymous';
             const ora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-            db.ref('spot_it_' + sezione).push({
-                autore: autore,
-                testo: testo,
-                ora: ora,
-                timestamp: Date.now()
-            });
-
+            let dati = JSON.parse(localStorage.getItem('spot_data_' + sezione) || '[]');
+            dati.unshift({ autore, testo, ora });
+            
+            localStorage.setItem('spot_data_' + sezione, JSON.stringify(dati));
             inputEl.value = '';
+            caricaMessaggi();
         }
 
-        function escapeHtml(text) {
-            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-        }
-
-        function eseguiBackup() {
-            alert("Database Cloud Real-Time attivo e sincronizzato.");
-        }
+        window.onload = caricaMessaggi;
     </script>
 </body>
 </html>
