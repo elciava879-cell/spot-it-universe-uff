@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Universo Spot-It</title>
+    <title>Spot-It Universe</title>
     <!-- Firebase SDK Compat (Realtime Database) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
@@ -228,66 +228,65 @@
 
     <div class="container">
         <header>
-            <h1>UNIVERSO SPOT-IT</h1>
-            <div class="subtitle">FLUSSO GLOBALE E CONnessione VIVA</div>
+            <h1>SPOT-IT UNIVERSE</h1>
+            <div class="subtitle">GLOBAL LIVE STREAM & CONNECTION</div>
         </header>
 
         <div class="user-box">
-            <label>NOME:</label>
-            <input type="text" id="userName" placeholder="Il tuo nome o alias...">
+            <label>NAME:</label>
+            <input type="text" id="userName" placeholder="Your name or alias...">
         </div>
 
         <div class="nav-tabs">
-            <button class="tab-btn active" onclick="switchTab('flow')">🔥 FLUSSO</button>
-            <button class="tab-btn" onclick="switchTab('rooms')">🗣️ CAMERE</button>
-            <button class="tab-btn" onclick="switchTab('direct')">💬 DIRETTO</button>
+            <button class="tab-btn active" onclick="switchTab('flow')">🔥 FLOW</button>
+            <button class="tab-btn" onclick="switchTab('rooms')">🗣️ ROOMS</button>
+            <button class="tab-btn" onclick="switchTab('direct')">💬 DIRECT</button>
         </div>
 
-        <!-- SEZIONE FLUSSO -->
+        <!-- FLOW SECTION -->
         <div id="panel-flow" class="section-panel active">
-            <div style="font-size: 0.85rem; color: var(--text-muted);">Esprimi il tuo pensiero, condividi una pillola di vita o una riflessione per il mondo.</div>
-            <textarea id="flowInput" placeholder="Scrivi il tuo pensiero per la strada..."></textarea>
-            <button class="action-btn" onclick="publishFlow()">PUBBLICA 🚀</button>
+            <div style="font-size: 0.85rem; color: var(--text-muted);">Share your thoughts, life pills, or reflections with the world.</div>
+            <textarea id="flowInput" placeholder="Express your thoughts for the road..."></textarea>
+            <button class="action-btn" onclick="publishFlow()">PUBLISH 🚀</button>
             <div class="feed" id="flowFeed"></div>
         </div>
 
-        <!-- SEZIONE CAMERE -->
+        <!-- ROOMS SECTION -->
         <div id="panel-rooms" class="section-panel">
-            <div style="font-size: 0.85rem; color: var(--text-muted);">Spazi tematici di condivisione profonda.</div>
+            <div style="font-size: 0.85rem; color: var(--text-muted);">Deep thematic rooms for shared growth.</div>
             <div class="rooms-list" id="roomsList">
-                <div class="room-item" onclick="enterRoom('ADHD & Crescita')">
-                    <span>🧠 ADHD & Crescita</span>
-                    <span style="font-size:0.75rem; color:var(--neon-cyan);">Entra</span>
+                <div class="room-item" onclick="enterRoom('ADHD & Growth')">
+                    <span>🧠 ADHD & Growth</span>
+                    <span style="font-size:0.75rem; color:var(--neon-cyan);">Enter</span>
                 </div>
-                <div class="room-item" onclick="enterRoom('Investimenti & Futuro')">
-                    <span>📈 Investimenti & Futuro</span>
-                    <span style="font-size:0.75rem; color:var(--neon-cyan);">Entra</span>
+                <div class="room-item" onclick="enterRoom('Investments & Future')">
+                    <span>📈 Investments & Future</span>
+                    <span style="font-size:0.75rem; color:var(--neon-cyan);">Enter</span>
                 </div>
-                <div class="room-item" onclick="enterRoom('La Vita per Gli Altri')">
-                    <span>💡 La Vita per Gli Altri</span>
-                    <span style="font-size:0.75rem; color:var(--neon-cyan);">Entra</span>
+                <div class="room-item" onclick="enterRoom('Life for Others')">
+                    <span>💡 Life for Others</span>
+                    <span style="font-size:0.75rem; color:var(--neon-cyan);">Enter</span>
                 </div>
             </div>
             <div id="roomChatView" style="display:none; flex-direction:column; gap:10px;">
-                <button class="tab-btn" style="width:fit-content;" onclick="leaveRoom()">⬅ Torna alle Stanze</button>
+                <button class="tab-btn" style="width:fit-content;" onclick="leaveRoom()">⬅ Back to Rooms</button>
                 <h3 id="activeRoomTitle" style="color:var(--neon-cyan); font-size:1rem;"></h3>
-                <textarea id="roomInput" placeholder="Scrivi nella camera..."></textarea>
-                <button class="action-btn" onclick="publishRoomMessage()">INVIA NEL CANALE</button>
+                <textarea id="roomInput" placeholder="Write in the room..."></textarea>
+                <button class="action-btn" onclick="publishRoomMessage()">SEND TO CHANNEL</button>
                 <div class="feed" id="roomFeed"></div>
             </div>
         </div>
 
-        <!-- SEZIONE DIRETTO -->
+        <!-- DIRECT SECTION -->
         <div id="panel-direct" class="section-panel">
-            <div style="font-size: 0.85rem; color: var(--text-muted);">Spazio riservato e diretto.</div>
-            <textarea id="directInput" placeholder="Scrivi un messaggio diretto..."></textarea>
-            <button class="action-btn" onclick="publishDirect()">INVIA MESSAGGIO</button>
+            <div style="font-size: 0.85rem; color: var(--text-muted);">Private and direct channel space.</div>
+            <textarea id="directInput" placeholder="Write a direct message..."></textarea>
+            <button class="action-btn" onclick="publishDirect()">SEND MESSAGE</button>
             <div class="feed" id="directFeed"></div>
         </div>
     </div>
 
     <script>
-        // CONFIGURAZIONE FIREBASE (Usa un database pubblico condiviso di prova o inserisci il tuo link Firebase)
         const firebaseConfig = {
             databaseURL: "https://spot-it-universo-default-rtdb.firebaseio.com/"
         };
@@ -297,18 +296,16 @@
         }
         const db = firebase.database();
 
-        // Gestione Nome Utente persistente
         const nameInput = document.getElementById('userName');
-        nameInput.value = localStorage.getItem('spot_it_user') || 'Viandante';
+        nameInput.value = localStorage.getItem('spot_it_user') || 'Wayfarer';
         nameInput.addEventListener('input', () => {
             localStorage.setItem('spot_it_user', nameInput.value);
         });
 
         function getUserName() {
-            return nameInput.value.trim() || 'Viandante';
+            return nameInput.value.trim() || 'Wayfarer';
         }
 
-        // Navigazione Tab
         function switchTab(tabName) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
@@ -325,7 +322,6 @@
             }
         }
 
-        // --- FLUSSO GLOBALE ---
         function publishFlow() {
             const text = document.getElementById('flowInput').value.trim();
             if(!text) return;
@@ -357,14 +353,13 @@
             }
         });
 
-        // --- CAMERE ---
         let currentRoomName = '';
         function enterRoom(roomName) {
             currentRoomName = roomName;
             document.getElementById('roomsList').style.display = 'none';
             const chatView = document.getElementById('roomChatView');
             chatView.style.display = 'flex';
-            document.getElementById('activeRoomTitle').innerText = 'Stanza: ' + roomName;
+            document.getElementById('activeRoomTitle').innerText = 'Room: ' + roomName;
             loadRoomMessages();
         }
 
@@ -411,7 +406,6 @@
             });
         }
 
-        // --- DIRETTO ---
         function publishDirect() {
             const text = document.getElementById('directInput').value.trim();
             if(!text) return;
