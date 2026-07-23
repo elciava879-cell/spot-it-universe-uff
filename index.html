@@ -3,34 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spot-it. Universe</title>
+    <title>Spot-it. Universe - Positive Vibe</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: #0d061a; color: #fff; padding: 15px; }
+        body { background-color: #151026; color: #fff; padding: 15px; } /* Blu cosmico più caldo */
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        h1 { font-size: 20px; color: #d8b4fe; }
-        .subtitle { font-size: 10px; color: #a78bfa; letter-spacing: 1px; }
+        h1 { font-size: 20px; color: #fce7f3; } /* Rosa chiarissimo */
+        .subtitle { font-size: 10px; color: #fb923c; letter-spacing: 1px; } /* Arancione solare */
         
-        .card { background: #1a103c; border: 1px solid #3b2875; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
-        .vibe-box { display: flex; justify-content: space-between; align-items: center; }
-        .vibe-tag { background: #6d28d9; padding: 4px 10px; border-radius: 20px; font-size: 12px; }
+        .card { background: #1e143b; border: 1px solid #5b21b6; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); } /* Card più definite */
+        .vibe-box { display: flex; justify-content: space-between; align-items: center; background: linear-gradient(90deg, #4f46e5, #ec4899); color: #fff; border: none;} /* Vibe box sfumata positiva */
+        .vibe-tag { background: #f59e0b; padding: 4px 10px; border-radius: 20px; font-size: 12px; color: #151026; font-weight: bold;} /* Tag giallo sole */
         
         /* Sezioni e menu */
         .nav-tabs { display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
-        .tab-btn { background: #26164f; border: 1px solid #4c1d95; color: #d8b4fe; padding: 8px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; white-space: nowrap; font-weight: 600; }
-        .tab-btn.active { background: linear-gradient(135deg, #7c3aed, #db2777); color: #fff; border-color: #ec4899; }
+        .tab-btn { background: #3b0764; border: 1px solid #7c3aed; color: #fbcfe8; padding: 8px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; white-space: nowrap; font-weight: 600; transition: all 0.2s; }
+        .tab-btn.active { background: linear-gradient(135deg, #f59e0b, #ec4899); color: #151026; border-color: #f59e0b; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
         
-        textarea { width: 100%; background: #0f0724; border: 1px solid #4c1d95; color: #fff; border-radius: 8px; padding: 10px; font-size: 14px; margin-top: 10px; resize: none; height: 90px; }
-        button.action-btn { width: 100%; background: linear-gradient(135deg, #ec4899, #8b5cf6); border: none; color: white; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 10px; }
+        textarea { width: 100%; background: #151026; border: 1px solid #7c3aed; color: #fff; border-radius: 8px; padding: 10px; font-size: 14px; margin-top: 10px; resize: none; height: 90px; }
+        button.action-btn { width: 100%; background: linear-gradient(135deg, #f472b6, #fb923c); border: none; color: #151026; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 10px; transition: all 0.2s; }
+        button.action-btn:hover { background: linear-gradient(135deg, #fb923c, #f472b6); transform: translateY(-1px);}
         
         .section-content { display: none; }
-        .section-content.active { display: block; }
+        .section-content.active { display: block; animation: fadeIn 0.3s ease-in; }
         
         .msg-list { margin-top: 12px; max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-        .msg-item { background: #26164f; padding: 12px; border-radius: 8px; font-size: 13px; border-left: 3px solid #ec4899; line-height: 1.4; }
-        .msg-time { font-size: 10px; color: #a78bfa; margin-top: 6px; text-align: right; }
+        .msg-item { background: #312e81; padding: 12px; border-radius: 8px; font-size: 13px; border-left: 3px solid #fb923c; line-height: 1.4; box-shadow: 0 2px 4px rgba(0,0,0,0.1);}
+        .msg-time { font-size: 10px; color: #fcd34d; margin-top: 6px; text-align: right; }
         
-        .art-quote { font-style: italic; color: #f472b6; font-size: 13px; margin-bottom: 10px; border-left: 2px solid #f472b6; padding-left: 8px; }
+        .art-quote { font-style: italic; color: #fda4af; font-size: 13px; margin-bottom: 10px; border-left: 2px solid #fda4af; padding-left: 8px; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -38,66 +41,62 @@
     <header>
         <div>
             <h1>Spot-it. Universe</h1>
-            <div class="subtitle">ARTE, RIFLESSIONI & VISIONE</div>
+            <div class="subtitle">POSITIVITY & CREATION</div>
         </div>
-        <button style="width: auto; padding: 6px 12px; font-size: 11px; background: #26164f; border: 1px solid #7c3aed; color: #fff; border-radius: 6px;" onclick="eseguiBackup()">Backup</button>
+        <button style="width: auto; padding: 6px 12px; font-size: 11px; background: #f59e0b; border: none; color: #151026; border-radius: 6px; font-weight: bold;" onclick="eseguiBackup()">Backup</button>
     </header>
 
     <div class="card vibe-box">
         <div>
-            <div style="font-size: 11px; color: #a78bfa;">In play:</div>
+            <div style="font-size: 11px; color: #fef3c7;">In play:</div>
             <div style="font-size: 13px; font-weight: bold;">Luv Sic - Nujabes & Shing02</div>
         </div>
-        <div class="vibe-tag">Vibe: 100%</div>
+        <div class="vibe-tag">Vibe: 100% Positiva</div>
     </div>
 
-    <!-- Menu di Navigazione tra le Anime dell'App -->
     <div class="nav-tabs">
-        <button class="tab-btn active" onclick="cambiaTab('riflessioni', this)">💭 Riflessioni & Arte</button>
-        <button class="tab-btn" onclick="cambiaTab('visione', this)">🌟 Visione Migliore</button>
-        <button class="tab-btn" onclick="cambiaTab('standup', this)">🎤 Stand-Up & Lab</button>
+        <button class="tab-btn active" onclick="cambiaTab('riflessioni', this)">💭 Riflessioni & Arte Solare</button>
+        <button class="tab-btn" onclick="cambiaTab('visione', this)">🌟 Visione Brillante</button>
+        <button class="tab-btn" onclick="cambiaTab('standup', this)">🎤 Stand-Up Vibrante</button>
     </div>
 
-    <!-- SEZIONE 1: Riflessioni, Condivisione e Arte -->
     <div id="riflessioni" class="section-content active">
         <div class="card">
-            <div class="art-quote">"L'arte e la condivisione delle riflessioni come ponte per superare il superfluo e toccare l'essenza."</div>
-            <h3 style="font-size: 15px; margin-bottom: 8px;">Condividi Pensiero o Arte</h3>
-            <textarea id="inputRiflessioni" placeholder="Scrivi una riflessione profonda, un'opera d'arte concettuale o una connessione umana..."></textarea>
-            <button class="action-btn" onclick="aggiungiContenuto('riflessioni')">PUBBLICA NEL FLUSSO 🎨</button>
+            <div class="art-quote">"L'arte e la condivisione sono luce che alimenta l'anima."</div>
+            <h3 style="font-size: 15px; margin-bottom: 8px;">Condividi la Luce</h3>
+            <textarea id="inputRiflessioni" placeholder="Condividi un'ispirazione, un'opera d'arte o un pensiero positivo..."></textarea>
+            <button class="action-btn" onclick="aggiungiContenuto('riflessioni')">DIFFONDI NEL FLUSSO 💖</button>
             
             <div class="msg-list" id="listRiflessioni">
                 <div class="msg-item">
-                    <div>[Riflessione] Accettare i frammenti del percorso è il primo passo per costruire qualcosa che duri.</div>
-                    <div class="msg-time">Spazio condiviso</div>
+                    <div>[Riflessione] Ogni passo è luce. Anche nel buio, la direzione è chiara.</div>
+                    <div class="msg-time">Flusso di positività</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- SEZIONE 2: La Ricerca della Visione Migliore -->
     <div id="visione" class="section-content">
         <div class="card">
-            <h3 style="font-size: 15px; margin-bottom: 8px;">🎯 La Mia Visione Migliore</h3>
-            <p style="font-size: 12px; color: #cbd5e1; margin-bottom: 10px;">Uno spazio focalizzato sulla crescita, sulla direzione e sul miglioramento continuo della propria versione interiore ed esteriore.</p>
-            <textarea id="inputVisione" placeholder="Qual è il prossimo passo verso la tua visione migliore? Fissa l'obiettivo..."></textarea>
-            <button class="action-btn" onclick="aggiungiContenuto('visione')">FISSA NELLA VISIONE ✨</button>
+            <h3 style="font-size: 15px; margin-bottom: 8px;">🎯 La Tua Visione Luminosa</h3>
+            <p style="font-size: 12px; color: #fef3c7; margin-bottom: 10px;">Coltiva la tua versione migliore con chiarezza e ottimismo.</p>
+            <textarea id="inputVisione" placeholder="Qual è il prossimo passo verso la tua versione migliore?"></textarea>
+            <button class="action-btn" onclick="aggiungiContenuto('visione')">FISSA LA META 🌟</button>
             
             <div class="msg-list" id="listVisione">
                 <div class="msg-item">
-                    <div>[Visione] Chiarezza d'intenti e zero distrazioni. Andare all'essenziale.</div>
+                    <div>[Visione] Credere in se stessi è il carburante per ogni grande impresa.</div>
                     <div class="msg-time">Obiettivo attivo</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- SEZIONE 3: Stand-Up & Lab -->
     <div id="standup" class="section-content">
         <div class="card">
-            <h3 style="font-size: 15px; margin-bottom: 8px;">🎤 Stand-Up & Laboratorio</h3>
-            <textarea id="inputStandup" placeholder="Scrivi la tua barra, il tuo pezzo comico o l'idea grezza..."></textarea>
-            <button class="action-btn" onclick="aggiungiContenuto('standup')">REGISTRA IN LAB 🚀</button>
+            <h3 style="font-size: 15px; margin-bottom: 8px;">🎤 Stand-Up & Lab</h3>
+            <textarea id="inputStandup" placeholder="La tua barra, il tuo pezzo comico o la tua idea brillante..."></textarea>
+            <button class="action-btn" onclick="aggiungiContenuto('standup')">CONDIVIDI LA VIBE 🚀</button>
             
             <div class="msg-list" id="listStandup">
                 <div class="msg-item">
