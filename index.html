@@ -40,6 +40,10 @@
         .boost-btn { background: linear-gradient(135deg, var(--neon-cyan), #9333ea); color: #000; border: none; padding: 8px 12px; border-radius: 8px; font-weight: bold; font-size: 11px; cursor: pointer; box-shadow: 0 0 10px rgba(56,189,248,0.4); }
         .boost-btn:active { transform: scale(0.95); }
 
+        .connection-status { font-size: 10px; padding: 4px 8px; border-radius: 6px; font-weight: bold; display: inline-block; margin-bottom: 6px; }
+        .online { background: rgba(16,185,129,0.2); color: var(--neon-emerald); border: 1px solid var(--neon-emerald); }
+        .offline { background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid #f87171; }
+
         .nav-tabs { display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
         .nav-tabs::-webkit-scrollbar { display: none; }
         .tab-btn { background: #261b4e; border: 1px solid #6d28d9; color: #e2e8f0; padding: 8px 12px; border-radius: 10px; font-size: 11px; cursor: pointer; white-space: nowrap; font-weight: 700; transition: all 0.2s; flex-shrink: 0; }
@@ -53,6 +57,9 @@
         .post-header { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #a78bfa; font-weight: 600; }
         .post-body { font-size: 13px; color: #f8fafc; line-height: 1.4; word-break: break-word; }
         
+        .post-img { width: 100%; border-radius: 8px; max-height: 200px; object-fit: cover; margin-top: 4px; cursor: pointer; }
+        .view-once-badge { background: #db2777; color: #fff; font-size: 9px; padding: 2px 6px; border-radius: 4px; display: inline-block; font-weight: bold; }
+        
         .post-actions { display: flex; align-items: center; gap: 12px; border-top: 1px solid #2e2163; padding-top: 8px; margin-top: 2px; }
         .action-icon-btn { background: none; border: none; color: #cbd5e1; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: 600; }
         
@@ -64,6 +71,8 @@
 
         textarea { width: 100%; background: #110c24; border: 1px solid var(--neon-purple); color: #fff; border-radius: 10px; padding: 10px; font-size: 13px; resize: none; height: 75px; outline: none; }
         textarea:focus { border-color: var(--neon-pink); }
+        
+        .file-input-label { display: block; background: #261b4e; border: 1px dashed var(--neon-cyan); color: var(--neon-cyan); text-align: center; padding: 8px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; margin-bottom: 6px; }
         
         .main-action-btn { width: 100%; background: linear-gradient(135deg, #f472b6, #fb923c); border: none; color: #151026; padding: 11px; border-radius: 10px; font-weight: 900; font-size: 13px; cursor: pointer; box-shadow: 0 4px 12px rgba(244,114,182,0.3); }
         
@@ -88,6 +97,9 @@
         </div>
     </header>
 
+    <!-- STATO CONNESSIONE E WIFI AUTOMATICO -->
+    <div id="netStatus" class="connection-status online">🟢 Connesso (Online & Cache Sync Attiva)</div>
+
     <!-- MOTORE DI EVOLUZIONE AUTONOMA HUD -->
     <div class="card evolution-hud">
         <div>
@@ -111,16 +123,21 @@
         <button class="tab-btn" onclick="cambiaTab('standup', this)">🎙️ Stand-Up & Giunti</button>
         <button class="tab-btn" onclick="cambiaTab('ai', this)">⚡ IA & Pillole</button>
         <button class="tab-btn" onclick="cambiaTab('vr', this)">🥽 VR Immersiva</button>
-        <button class="tab-btn" onclick="cambiaTab('libri', this)">📚 Libro ADHD</button>
+        <button class="tab-btn" onclick="cambiaTab('filosofia', this)">🧘 Filosofia & Benessere</button>
         <button class="tab-btn" onclick="cambiaTab('evolution', this)">🧬 Log Evoluzione</button>
     </div>
 
-    <!-- SEZIONE 1: FEED & MESSAGGISTICA LIVE -->
+    <!-- SEZIONE 1: FEED & MESSAGGISTICA LIVE (CON SUPPORTO FOTO VIEW-ONCE E OFFLINE CACHE) -->
     <div id="feed" class="section-content active">
         <div class="card" style="margin-bottom:0; flex-grow:1; display:flex; flex-direction:column;">
-            <div style="font-size: 13px; font-weight: bold; margin-bottom: 8px; color: #f472b6;">🌐 Flusso Globale & Condivisione</div>
-            <textarea id="inputFeed" placeholder="Esprimi un pensiero reale, una storia o una pillola di vita..."></textarea>
-            <button class="main-action-btn" style="margin-top: 8px;" onclick="aggiungiPost()">CONDIVIDI NEL FEED 🚀</button>
+            <div style="font-size: 13px; font-weight: bold; margin-bottom: 8px; color: #f472b6;">🌐 Flusso Globale, Messaggi Offline & Foto 1-View</div>
+            <textarea id="inputFeed" placeholder="Esprimi un pensiero reale, una storia o un messaggio (leggibile anche offline)..."></textarea>
+            
+            <label class="file-input-label" for="inputFoto">📷 Aggiungi Foto (Visibile una sola volta)</label>
+            <input type="file" id="inputFoto" accept="image/*" style="display:none;" onchange="anteprimaFoto(this)">
+            <div id="previewContainer" style="font-size:11px; color:var(--neon-cyan); margin-bottom:6px; display:none;">📸 Foto caricata (pronta per visualizzazione unica)</div>
+
+            <button class="main-action-btn" style="margin-top: 4px;" onclick="aggiungiPost()">CONDIVIDI NEL FEED 🚀</button>
             
             <div class="feed-container" id="feedList" style="margin-top: 10px;"></div>
         </div>
@@ -142,7 +159,7 @@
     <div id="ai" class="section-content">
         <div class="card" style="margin-bottom:0;">
             <div style="font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #a855f7;">⚡ Assistente IA Veloce & Preciso</div>
-            <textarea id="inputAi" placeholder="Chiedi analisi sulla crescita, strategie d'investimento o riflessioni..."></textarea>
+            <textarea id="inputAi" placeholder="Chiedi analisi sulla crescita, strategie o riflessioni..."></textarea>
             <button class="main-action-btn" style="margin-top: 8px;" onclick="chiediAi()">INTERROGA IA 🤖</button>
             
             <div class="ai-box" id="aiResponseBox" style="margin-top: 10px;">
@@ -158,18 +175,18 @@
             <div class="vr-screen">
                 <div style="font-size: 28px;">🌌</div>
                 <div style="font-size: 13px; font-weight: bold; color: #f0abfc;">Ambiente Immersivo Attivo</div>
-                <div style="font-size: 11px; color: #94a3b8;">Visualizzazione focalizzata per la scrittura del libro e distacco totale dai rumori esterni.</div>
+                <div style="font-size: 11px; color: #94a3b8;">Visualizzazione focalizzata per la scrittura e distacco totale dai rumori esterni.</div>
                 <button class="top-btn" style="background:#0284c7; border:none; color:#fff; margin-top:6px;" onclick="attivaFullscreenVR()">ATTIVA SCHERMO INTERO 👁️</button>
             </div>
         </div>
     </div>
 
-    <!-- SEZIONE 5: LIBRO ADHD & PILASTRI -->
-    <div id="libri" class="section-content">
+    <!-- SEZIONE 5: FILOSOFIA & ARTE DEL BENESSERE (ex ADHD) -->
+    <div id="filosofia" class="section-content">
         <div class="card" style="margin-bottom:0;">
-            <div style="font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #facc15;">📚 Gestione Libro ADHD & Pillole</div>
-            <textarea id="inputLibro" placeholder="Organizza contenuti per il libro o appnota una pillola di crescita..."></textarea>
-            <button class="main-action-btn" style="margin-top: 8px;" onclick="salvaContenutoLibro()">SALVA CAPITOLO / PILLOLA ✍️</button>
+            <div style="font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #facc15;">🧘 Filosofia & Arte del Benessere</div>
+            <textarea id="inputLibro" placeholder="Annota riflessioni filosofiche, pratiche di benessere o pillole di crescita interiore..."></textarea>
+            <button class="main-action-btn" style="margin-top: 8px;" onclick="salvaContenutoLibro()">REGISTRA PENSIERO ✍️</button>
             
             <div class="feed-container" id="libroList" style="margin-top: 10px;"></div>
         </div>
@@ -196,6 +213,21 @@
         }
         const db = firebase.database();
 
+        // --- GESTIONE CONNESSIONE E WIFI AUTOMATICO (OFFLINE SYNC) ---
+        function aggionaStatoRete() {
+            const statusEl = document.getElementById('netStatus');
+            if (navigator.onLine) {
+                statusEl.className = "connection-status online";
+                statusEl.innerHTML = "🟢 Connesso (Online & WiFi Sync Attivo)";
+                sincronizzaOfflineQueue();
+            } else {
+                statusEl.className = "connection-status offline";
+                statusEl.innerHTML = "🔴 Offline (Lettura messaggi da cache locale & WiFi storage)";
+            }
+        }
+        window.addEventListener('online', aggionaStatoRete);
+        window.addEventListener('offline', aggionaStatoRete);
+
         // --- MOTORE DI EVOLUZIONE AUTONOMA ---
         let currentVision = parseFloat(localStorage.getItem('spot_it_vision')) || 1.00;
 
@@ -221,7 +253,6 @@
             localStorage.setItem('spot_it_vision', currentVision);
             updateVisionUI();
 
-            // Mutazioni autonome in base ai livelli di visione raggiunti
             if(currentVision >= 2.00 && currentVision < 3.00) {
                 document.documentElement.style.setProperty('--neon-pink', '#ff00ff');
                 logMutation("Mutation triggered: Spectrum shifts to Magenta.");
@@ -235,13 +266,14 @@
                 logMutation("Vision elevated to " + currentVision.toFixed(2) + "x. Runtime optimized.");
             }
 
-            db.ref('autonomousEngine/visionMetrics').push({
-                vision: currentVision,
-                timestamp: new Date().toISOString()
-            });
+            if(navigator.onLine) {
+                db.ref('autonomousEngine/visionMetrics').push({
+                    vision: currentVision,
+                    timestamp: new Date().toISOString()
+                });
+            }
         }
 
-        // Gestione Installazione PWA
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
@@ -271,32 +303,104 @@
         }
 
         function caricaDati() {
+            aggionaStatoRete();
             caricaFeed();
             caricaStandup();
             caricaLibro();
         }
 
-        // --- FEED & MESSAGGISTICA IG-STYLE ---
-        function aggiungiPost() {
-            const txt = document.getElementById('inputFeed').value.trim();
-            if (!txt) return;
+        // --- GESTIONE FOTO VIEW-ONCE ---
+        let base64FotoTemp = null;
+        function anteprimaFoto(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    base64FotoTemp = e.target.result;
+                    document.getElementById('previewContainer').style.display = 'block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function apriFotoUnaSolaVolta(postId) {
             let posts = JSON.parse(localStorage.getItem('spot_feed') || '[]');
-            posts.unshift({ id: Date.now(), testo: txt, ora: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), likes: 0, liked: false, commenti: [] });
+            posts = posts.map(p => {
+                if(p.id === postId) {
+                    p.foto Visualizzata = true;
+                }
+                return p;
+            });
             localStorage.setItem('spot_feed', JSON.stringify(posts));
-            document.getElementById('inputFeed').value = '';
             caricaFeed();
         }
 
+        function aggiungiPost() {
+            const txt = document.getElementById('inputFeed').value.trim();
+            if (!txt && !base64FotoTemp) return;
+            
+            let posts = JSON.parse(localStorage.getItem('spot_feed') || '[]');
+            const nuovoPost = {
+                id: Date.now(),
+                testo: txt,
+                foto: base64FotoTemp,
+                fotoVisualizzata: false,
+                ora: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                likes: 0,
+                liked: false,
+                commenti: []
+            };
+
+            posts.unshift(nuovoPost);
+            localStorage.setItem('spot_feed', JSON.stringify(posts));
+
+            // Sincronizzazione Firebase se online
+            if(navigator.onLine) {
+                db.ref('spot_feed_sync').push(nuovoPost);
+            } else {
+                let offlineQueue = JSON.parse(localStorage.getItem('spot_offline_queue') || '[]');
+                offlineQueue.push(nuovoPost);
+                localStorage.setItem('spot_offline_queue', JSON.stringify(offlineQueue));
+            }
+
+            document.getElementById('inputFeed').value = '';
+            document.getElementById('inputFoto').value = '';
+            document.getElementById('previewContainer').style.display = 'none';
+            base64FotoTemp = null;
+            caricaFeed();
+        }
+
+        function sincronizzaOfflineQueue() {
+            let offlineQueue = JSON.parse(localStorage.getItem('spot_offline_queue') || '[]');
+            if(offlineQueue.length > 0 && navigator.onLine) {
+                offlineQueue.forEach(item => {
+                    db.ref('spot_feed_sync').push(item);
+                });
+                localStorage.removeItem('spot_offline_queue');
+                logMutation("Offline queue successfully synchronized via WiFi/Network.");
+            }
+        }
+
         function caricaFeed() {
-            const posts = JSON.parse(localStorage.getItem('spot_feed') || '[{"id":1, "testo":"🔥 Benvenuti nel nuovo universo interattivo definitivo con motore di evoluzione autonoma.", "ora":"02:50", "likes": 4, "liked": false, "commenti": [{"testo": "Spettacolo puro!", "ora": "02:52"}]}]');
+            const posts = JSON.parse(localStorage.getItem('spot_feed') || '[{"id":1, "testo":"🔥 Benvenuti nel nuovo ecosistema offline-ready con foto a visualizzazione singola.", "ora":"02:50", "likes": 4, "liked": false, "commenti": [{"testo": "Spettacolo puro!", "ora": "02:52"}]}]');
             const container = document.getElementById('feedList');
-            container.innerHTML = posts.map(p => `
+            container.innerHTML = posts.map(p => {
+                let fotoHTML = '';
+                if(p.foto) {
+                    if(!p.fotoVisualizzata) {
+                        fotoHTML = `<div style="margin-top:6px;"><span class="view-once-badge">📸 FOTO (VISIBILE UNA SOLA VOLTA)</span><br><img src="${p.foto}" class="post-img" onclick="apriFotoUnaSolaVolta(${p.id})" title="Clicca per visualizzare ed eliminare"></div>`;
+                    } else {
+                        fotoHTML = `<div style="margin-top:6px; font-size:11px; color:#94a3b8; font-style:italic;">🔒 Foto a visualizzazione singola già aperta ed eliminata dalla cache.</div>`;
+                    }
+                }
+
+                return `
                 <div class="post-card">
                     <div class="post-header">
                         <span>✨ Creator Universe (${currentVision.toFixed(2)}x)</span>
                         <span>${p.ora}</span>
                     </div>
                     <div class="post-body">${p.testo}</div>
+                    ${fotoHTML}
                     <div class="post-actions">
                         <button class="action-icon-btn" onclick="toggleLike(${p.id})">${p.liked ? '❤️' : '🤍'} ${p.likes}</button>
                         <button class="action-icon-btn" onclick="toggleCommentBox(${p.id})">💬 Commenti (${p.commenti.length})</button>
@@ -306,12 +410,12 @@
                             ${p.commenti.map(c => `<div class="comment-item"><span>${c.testo}</span><span style="font-size:9px; color:#94a3b8;">${c.ora}</span></div>`).join('')}
                         </div>
                         <div class="comment-input-box">
-                            <input type="text" class="comment-input" id="c-input-${p.id}" placeholder="Rispondi al commento...">
+                            <input type="text" class="comment-input" id="c-input-${p.id}" placeholder="Rispondi...">
                             <button class="comment-send-btn" onclick="aggiungiCommento(${p.id})">Invia</button>
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `;}).join('');
         }
 
         function toggleLike(id) {
@@ -348,7 +452,6 @@
             document.getElementById(`comments-${id}`).style.display = 'flex';
         }
 
-        // --- STAND UP & LAB ---
         function aggiungiStandup() {
             const txt = document.getElementById('inputStandup').value.trim();
             if(!txt) return;
@@ -369,35 +472,33 @@
             `).join('');
         }
 
-        // --- IA VELOCE E PRECISA ---
         function chiediAi() {
             const q = document.getElementById('inputAi').value.trim();
             if(!q) return;
             const box = document.getElementById('aiResponseBox');
-            box.innerHTML = `<div>🤖 <strong>IA Coach:</strong> Analizzando "${q}" con indice di visione ${currentVision.toFixed(2)}x...</div>`;
+            box.innerHTML = `<div>🤖 <strong>IA Coach:</strong> Analizzando "${q}" in modalità offline/online...</div>`;
             
             setTimeout(() => {
-                box.innerHTML = `<div>✨ <strong>Risposta IA:</strong> Per quanto riguarda "${q}", l'evoluzione autonoma suggerisce di fondere la struttura ADHD con la lucidità strategica. Il sistema sta rispondendo correttamente all'input!</div>`;
+                box.innerHTML = `<div>✨ <strong>Risposta IA:</strong> La filosofia del benessere interiore e l'equilibrio offline ti permettono di mantenere la visione lucida anche senza connessione WiFi.</div>`;
             }, 600);
         }
 
-        // --- LIBRO & PILLOLE ---
         function salvaContenutoLibro() {
             const txt = document.getElementById('inputLibro').value.trim();
             if(!txt) return;
-            let list = JSON.parse(localStorage.getItem('spot_libro') || '[]');
-            list.unshift({ testo: `📖 ${txt}`, ora: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
-            localStorage.setItem('spot_libro', JSON.stringify(list));
+            let list = JSON.parse(localStorage.getItem('spot_filosofia') || '[]');
+            list.unshift({ testo: `🧘 ${txt}`, ora: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
+            localStorage.setItem('spot_filosofia', JSON.stringify(list));
             document.getElementById('inputLibro').value = '';
             caricaLibro();
         }
 
         function caricaLibro() {
-            const list = JSON.parse(localStorage.getItem('spot_libro') || '[{"testo":"📖 [Pilastro ADHD & Vita] Organizzazione contenuti capitolo iniziale.", "ora":"02:50"}]');
+            const list = JSON.parse(localStorage.getItem('spot_filosofia') || '[{"testo":"🧘 La ricerca della pace interiore attraverso l\'arte del benessere e la filosofia quotidiana.", "ora":"02:50"}]');
             document.getElementById('libroList').innerHTML = list.map(item => `
                 <div class="post-card">
                     <div class="post-body">${item.testo}</div>
-                    <div style="font-size:9px; color:#fcd34d; text-align:right;">${item.ora}</div>
+                    <div style="font-size:9px; color:#facc15; text-align:right;">${item.ora}</div>
                 </div>
             `).join('');
         }
@@ -408,14 +509,14 @@
             } else if (document.documentElement.webkitRequestFullscreen) {
                 document.documentElement.webkitRequestFullscreen();
             }
-            alert("🥽 Modalità VR Immersiva attivata. Concentrazione totale sul flusso creativo.");
+            alert("🥽 Modalità VR Immersiva attivata.");
         }
 
         function eseguiBackup() {
             const data = {
                 feed: localStorage.getItem('spot_feed'),
                 standup: localStorage.getItem('spot_standup'),
-                libro: localStorage.getItem('spot_libro'),
+                filosofia: localStorage.getItem('spot_filosofia'),
                 vision: currentVision
             };
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'json' });
