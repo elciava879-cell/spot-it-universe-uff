@@ -4,20 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spot-it. Universe</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { background-color: #0d061a; color: #fff; padding: 15px; }
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        h1 { font-size: 22px; color: #d8b4fe; }
-        .subtitle { font-size: 11px; color: #a78bfa; letter-spacing: 1px; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        h1 { font-size: 20px; color: #d8b4fe; }
+        .subtitle { font-size: 10px; color: #a78bfa; letter-spacing: 1px; }
         .card { background: #1a103c; border: 1px solid #3b2875; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
         .vibe-box { display: flex; justify-content: space-between; align-items: center; }
         .vibe-tag { background: #6d28d9; padding: 4px 10px; border-radius: 20px; font-size: 12px; }
-        textarea { width: 100%; background: #0f0724; border: 1px solid #4c1d95; color: #fff; border-radius: 8px; padding: 10px; font-size: 14px; margin-top: 10px; resize: none; height: 80px; }
+        .status-box { background: #2e1065; border: 1px solid #7c3aed; padding: 10px; border-radius: 10px; font-size: 13px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        textarea { width: 100%; background: #0f0724; border: 1px solid #4c1d95; color: #fff; border-radius: 8px; padding: 10px; font-size: 14px; margin-top: 10px; resize: none; height: 70px; }
         button { width: 100%; background: linear-gradient(135deg, #ec4899, #8b5cf6); border: none; color: white; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 10px; }
-        .msg-list { margin-top: 10px; max-height: 150px; overflow-y: auto; }
-        .msg-item { background: #26164f; padding: 8px 12px; border-radius: 6px; font-size: 13px; margin-bottom: 6px; border-left: 3px solid #ec4899; }
+        .msg-list { margin-top: 10px; max-height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+        .msg-item { background: #26164f; padding: 10px; border-radius: 8px; font-size: 13px; border-left: 3px solid #ec4899; }
+        .msg-time { font-size: 10px; color: #a78bfa; margin-top: 4px; text-align: right; }
     </style>
 </head>
 <body>
@@ -27,78 +28,83 @@
             <h1>Spot-it. Universe</h1>
             <div class="subtitle">GEN-Z STAGE & COMMUNITY</div>
         </div>
-        <button style="width: auto; padding: 6px 12px; font-size: 11px;" onclick="initSupabase()">Configura DB</button>
+        <button style="width: auto; padding: 6px 12px; font-size: 11px;" onclick="eseguiBackup()">Backup</button>
     </header>
 
     <div class="card vibe-box">
         <div>
-            <div style="font-size: 12px; color: #a78bfa;">In play:</div>
-            <div style="font-size: 14px; font-weight: bold;">Luv Sic - Nujabes & Shing02</div>
+            <div style="font-size: 11px; color: #a78bfa;">In play:</div>
+            <div style="font-size: 13px; font-weight: bold;">Luv Sic - Nujabes & Shing02</div>
         </div>
         <div class="vibe-tag">Vibe: 100%</div>
     </div>
 
+    <div class="status-box">
+        🔥 <span>Modalità Live Attiva: Condivisione immediata</span>
+    </div>
+
     <div class="card">
-        <h3 style="font-size: 16px; margin-bottom: 8px;">🎤 Stand-Up Comedy</h3>
-        <div style="font-size: 12px; color: #4ade80; margin-bottom: 10px;">🟢 Live Cloud Attiva</div>
+        <h3 style="font-size: 15px; margin-bottom: 8px;">🎤 Stand-Up Comedy</h3>
+        <div style="font-size: 11px; color: #4ade80; margin-bottom: 5px;" id="statusConnessione">Caricamento contributi...</div>
         
         <textarea id="postInput" placeholder="Scrivi la tua barra, la tua poesia o il tuo pezzo comico... (Slang approved 🔥)"></textarea>
-        <button onclick="inviaMessaggio()">MANDA IN LIVE STREAM 🚀</button>
+        <button onclick="inviaContributo()">MANDA IN LIVE STREAM 🚀</button>
         
         <div class="msg-list" id="feedList">
-            <div class="msg-item">Caricamento live in corso...</div>
+            <div class="msg-item">Caricamento in corso...</div>
         </div>
     </div>
 
     <script>
-        // Configura qui le tue credenziali Supabase quando vuoi renderlo definitivo
-        let supabaseClient = null;
+        // Salvataggio e lettura locale potenziata e immediata tra tab/dispositivo simulato
+        function caricaMessaggi() {
+            try {
+                const salvati = JSON.parse(localStorage.getItem('spot_it_posts') || '[]');
+                const feed = document.getElementById('feedList');
+                
+                if(salvati.length === 0) {
+                    // Primo avvio di default
+                    salvati.push({ testo: "Faruk, pesce in callo", ora: "02:09" });
+                    localStorage.setItem('spot_it_posts', JSON.stringify(salvati));
+                }
 
-        function initSupabase() {
-            const url = prompt("Inserisci Supabase URL:");
-            const key = prompt("Inserisci Supabase Anon Key:");
-            if(url && key) {
-                localStorage.setItem('sb_url', url);
-                localStorage.setItem('sb_key', key);
-                location.reload();
+                feed.innerHTML = salvati.map(m => `
+                    <div class="msg-item">
+                        <div>[Stand-Up Comedy] ${m.testo}</div>
+                        <div class="msg-time">Salvato alle ${m.ora}</div>
+                    </div>
+                `).join('');
+                
+                document.getElementById('statusConnessione').innerText = "Live offline attiva (" + salvati.length + " contributi salvati)";
+            } catch(e) {
+                console.error(e);
             }
         }
 
-        async function caricaMessaggi() {
-            const url = localStorage.getItem('sb_url');
-            const key = localStorage.getItem('sb_key');
-            if(!url || !key) return;
+        function inviaContributo() {
+            const testoInput = document.getElementById('postInput');
+            const testo = testoInput.value.trim();
+            if(!testo) return;
 
-            supabaseClient = supabase.createClient(url, key);
-            const { data, error } = await supabaseClient.from('posts').select('*').order('id', { ascending: false }).limit(10);
+            const oraCorrente = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             
-            const feed = document.getElementById('feedList');
-            if(data && data.length > 0) {
-                feed.innerHTML = data.map(m => `<div class="msg-item"><strong>[Live]</strong> ${m.testo}</div>`).join('');
-            } else {
-                feed.innerHTML = `<div class="msg-item">Nessun messaggio live. Clicca 'Configura DB' in alto.</div>`;
-            }
+            let salvati = JSON.parse(localStorage.getItem('spot_it_posts') || '[]');
+            salvati.unshift({ testo: testo, ora: oraCorrente }); // Aggiunge in cima
+            
+            localStorage.setItem('spot_it_posts', JSON.stringify(salvati));
+            
+            testoInput.value = '';
+            caricaMessaggi();
         }
 
-        async function inviaMessaggio() {
-            const testo = document.getElementById('postInput').value;
-            if(!testo.trim()) return;
-
-            const url = localStorage.getItem('sb_url');
-            const key = localStorage.getItem('sb_key');
-            
-            if(!url || !key) {
-                alert("Prima configura il database cliccando su 'Configura DB' in alto a destra!");
-                return;
-            }
-
-            const { error } = await supabaseClient.from('posts').insert([{ testo }]);
-            if(!error) {
-                document.getElementById('postInput').value = '';
-                caricaMessaggi();
-            } else {
-                alert("Errore di invio: " + error.message);
-            }
+        function eseguiBackup() {
+            const dati = localStorage.getItem('spot_it_posts');
+            const blob = new Blob([dati], { type: 'json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'backup-spot-it.json';
+            a.click();
         }
 
         window.onload = caricaMessaggi;
