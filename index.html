@@ -1,40 +1,29 @@
 <!DOCTYPE html>
-<html lang="it" translate="no">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Spot-it. Universe</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { background-color: #0f0a1a; color: #fff; padding: 15px; max-width: 480px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
-        
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        h1 { font-size: 20px; color: #fce7f3; }
-        .subtitle { font-size: 10px; color: #38bdf8; letter-spacing: 1px; font-weight: bold; }
-        
-        .card { background: #181032; border: 1px solid #6d28d9; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .vibe-box { display: flex; justify-content: space-between; align-items: center; background: linear-gradient(90deg, #4f46e5, #0284c7); color: #fff; border: none; }
-        .vibe-tag { background: #22c55e; padding: 4px 10px; border-radius: 20px; font-size: 11px; color: #0f0a1a; font-weight: bold; }
-        
-        .nav-tabs { display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
-        .nav-tabs::-webkit-scrollbar { display: none; }
-        .tab-btn { background: #3b0764; border: 1px solid #7c3aed; color: #fbcfe8; padding: 8px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; white-space: nowrap; font-weight: 600; flex-shrink: 0; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        h1 { font-size: 19px; color: #fce7f3; }
+        .subtitle { font-size: 10px; color: #38bdf8; font-weight: bold; }
+        .card { background: #181032; border: 1px solid #6d28d9; border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+        .nav-tabs { display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px; }
+        .tab-btn { background: #3b0764; border: 1px solid #7c3aed; color: #fbcfe8; padding: 8px 12px; border-radius: 8px; font-size: 11px; cursor: pointer; white-space: nowrap; font-weight: 600; }
         .tab-btn.active { background: linear-gradient(135deg, #0284c7, #9333ea); color: #fff; border-color: #38bdf8; }
-        
-        .section-content { display: none; flex-direction: column; gap: 10px; flex-grow: 1; }
+        .section-content { display: none; flex-direction: column; gap: 10px; }
         .section-content.active { display: flex; }
-        
-        textarea { width: 100%; background: #0f0a1a; border: 1px solid #7c3aed; color: #fff; border-radius: 8px; padding: 10px; font-size: 14px; margin-top: 8px; resize: none; height: 85px; outline: none; }
-        button.action-btn { width: 100%; background: linear-gradient(135deg, #0284c7, #9333ea); border: none; color: #fff; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 10px; }
-        
-        .msg-list { margin-top: 12px; max-height: 280px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .msg-item { background: #23174a; padding: 12px; border-radius: 10px; font-size: 13px; border-left: 3px solid #38bdf8; line-height: 1.4; display: flex; flex-direction: column; gap: 4px; }
-        .msg-header { display: flex; justify-content: space-between; font-size: 11px; color: #38bdf8; font-weight: bold; }
-        .msg-text { color: #f3f4f6; word-break: break-word; }
-        .msg-time { font-size: 9px; color: #9ca3af; text-align: right; }
-        
-        .user-setup { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
-        .user-setup input { width: 100%; background: #0f0a1a; border: 1px solid #7c3aed; color: #38bdf8; border-radius: 8px; padding: 8px; font-size: 13px; font-weight: bold; outline: none; }
+        textarea { width: 100%; background: #0f0a1a; border: 1px solid #7c3aed; color: #fff; border-radius: 8px; padding: 10px; font-size: 13px; resize: none; height: 75px; outline: none; }
+        button.action-btn { width: 100%; background: linear-gradient(135deg, #0284c7, #9333ea); border: none; color: #fff; padding: 11px; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; }
+        .msg-list { margin-top: 10px; max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        .msg-item { background: #23174a; padding: 10px; border-radius: 8px; font-size: 13px; border-left: 3px solid #38bdf8; }
+        .msg-header { font-size: 10px; color: #38bdf8; font-weight: bold; margin-bottom: 3px; display: flex; justify-content: space-between; }
+        .msg-time { font-size: 9px; color: #9ca3af; }
+        .user-setup { display: flex; gap: 6px; margin-bottom: 10px; align-items: center; }
+        .user-setup input { width: 100%; background: #0f0a1a; border: 1px solid #7c3aed; color: #38bdf8; border-radius: 8px; padding: 8px; font-size: 12px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -46,16 +35,8 @@
         </div>
     </header>
 
-    <div class="card vibe-box">
-        <div>
-            <div style="font-size: 11px; color: #e2e8f0;">In play:</div>
-            <div style="font-size: 13px; font-weight: bold;">Luv Sic - Nujabes & Shing02</div>
-        </div>
-        <div class="vibe-tag">Locale Attivo</div>
-    </div>
-
     <div class="user-setup">
-        <span style="font-size: 12px; color: #cbd5e1; white-space: nowrap;">Nome:</span>
+        <span style="font-size: 11px; color: #cbd5e1; white-space: nowrap;">Nome:</span>
         <input type="text" id="usernameInput" value="StreetExplorer" oninput="salvaUsername()">
     </div>
 
@@ -65,42 +46,37 @@
         <button class="tab-btn" onclick="cambiaTab('direct', this)">💬 Direct Style</button>
     </div>
 
-    <!-- SEZIONE 1 -->
     <div id="flusso" class="section-content active">
         <div class="card">
-            <h3 style="font-size: 15px; margin-bottom: 8px;">Condividi nel Flusso</h3>
-            <textarea id="inputFlusso" placeholder="Scrivi un pensiero o un'ispirazione..."></textarea>
-            <button class="action-btn" onclick="inviaMessaggio('flusso')">PUBBLICA NEL FLUSSO 🚀</button>
+            <h3 style="font-size: 14px; margin-bottom: 6px;">Condividi nel Flusso</h3>
+            <textarea id="inputFlusso" placeholder="Scrivi un pensiero..."></textarea>
+            <button class="action-btn" onclick="inviaMessaggio('flusso')">PUBBLICA 🚀</button>
             <div class="msg-list" id="listFlusso"></div>
         </div>
     </div>
 
-    <!-- SEZIONE 2 -->
     <div id="rooms" class="section-content">
         <div class="card">
-            <h3 style="font-size: 15px; margin-bottom: 8px;">🗣️ Room di Scambio</h3>
-            <textarea id="inputRooms" placeholder="Apri un dibattito o di' la tua..."></textarea>
-            <button class="action-btn" onclick="inviaMessaggio('rooms')">INVIA NELLA ROOM 🎙️</button>
+            <h3 style="font-size: 14px; margin-bottom: 6px;">🗣️ Room di Scambio</h3>
+            <textarea id="inputRooms" placeholder="Apri un dibattito..."></textarea>
+            <button class="action-btn" onclick="inviaMessaggio('rooms')">INVIA 🎙️</button>
             <div class="msg-list" id="listRooms"></div>
         </div>
     </div>
 
-    <!-- SEZIONE 3 -->
     <div id="direct" class="section-content">
         <div class="card">
-            <h3 style="font-size: 15px; margin-bottom: 8px;">💬 Direct Style</h3>
-            <textarea id="inputDirect" placeholder="Scrivi un messaggio diretto..."></textarea>
-            <button class="action-btn" onclick="inviaMessaggio('direct')">INVIA MESSAGGIO 💌</button>
+            <h3 style="font-size: 14px; margin-bottom: 6px;">💬 Direct Style</h3>
+            <textarea id="inputDirect" placeholder="Scrivi un messaggio..."></textarea>
+            <button class="action-btn" onclick="inviaMessaggio('direct')">INVIA 💌</button>
             <div class="msg-list" id="listDirect"></div>
         </div>
     </div>
 
     <script>
         function salvaUsername() {
-            const nome = document.getElementById('usernameInput').value;
-            localStorage.setItem('spot_username', nome);
+            localStorage.setItem('spot_username', document.getElementById('usernameInput').value);
         }
-
         if(localStorage.getItem('spot_username')) {
             document.getElementById('usernameInput').value = localStorage.getItem('spot_username');
         }
@@ -116,17 +92,14 @@
             ['flusso', 'rooms', 'direct'].forEach(sezione => {
                 const dati = JSON.parse(localStorage.getItem('spot_data_' + sezione) || '[]');
                 const listEl = document.getElementById('list' + sezione.charAt(0).toUpperCase() + sezione.slice(1));
-                
                 if (dati.length === 0) {
-                    listEl.innerHTML = '<div class="msg-item"><div class="msg-header"><span>Info</span><span>System</span></div><div class="msg-text">Nessun messaggio salvato. Scrivi il primo!</div></div>';
+                    listEl.innerHTML = '<div class="msg-item"><div class="msg-header"><span>System</span></div><div style="color:#f3f4f6;">Nessun messaggio. Scrivi il primo!</div></div>';
                     return;
                 }
-
                 listEl.innerHTML = dati.map(m => `
                     <div class="msg-item">
-                        <div class="msg-header"><span>${m.autore}</span><span>POST</span></div>
-                        <div class="msg-text">${m.testo}</div>
-                        <div class="msg-time">${m.ora}</div>
+                        <div class="msg-header"><span>${m.autore}</span><span class="msg-time">${m.ora}</span></div>
+                        <div style="color:#f3f4f6; word-break:break-word;">${m.testo}</div>
                     </div>
                 `).join('');
             });
@@ -136,13 +109,10 @@
             const inputEl = document.getElementById('input' + sezione.charAt(0).toUpperCase() + sezione.slice(1));
             const testo = inputEl.value.trim();
             if (!testo) return;
-
             const autore = document.getElementById('usernameInput').value || 'Anonymous';
             const ora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
             let dati = JSON.parse(localStorage.getItem('spot_data_' + sezione) || '[]');
             dati.unshift({ autore, testo, ora });
-            
             localStorage.setItem('spot_data_' + sezione, JSON.stringify(dati));
             inputEl.value = '';
             caricaMessaggi();
